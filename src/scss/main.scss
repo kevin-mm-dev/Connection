@@ -1,1 +1,68 @@
-@import '../../node_modules/bulma/bulma.sass'
+@import '../../node_modules/bulma/bulma.sass';
+$fondoBarra:#4D4A4A;
+$textoBlanco:#E1E1E1;
+///////////////////////////////    Barra navegacion
+#principal {
+    height: 3.5rem;
+    color: $textoBlanco;
+    display: flex;
+    background-color: $fondoBarra;
+    padding: 10px;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    font-size: 1.5rem;
+}
+
+/////////////////////////////////////  Barra menu
+#menuAdmin ul {
+    display: flex;
+}
+
+#menuAdmin li {
+    padding-left: 20px;
+    list-style: none;
+}
+
+#menuAdmin li a {
+    color: black;
+    text-decoration: none;
+}
+
+#menuAdmin li a:hover {
+    color: $textoBlanco;
+    background: $fondoBarra;
+}
+
+#menuAdmin {
+    padding: 15px;
+    display: flex;
+    // padding-left: 20px;
+    font-size: .9rem;
+}
+
+.txtTitulo {
+    margin: 10px;
+    font-size: 2.4rem;
+}
+
+//////////////////////////////   ELEMENTOS EXTRAS
+hr {
+    height: 2.5px;
+    background: $fondoBarra;
+    margin: 0%;
+}
+
+#lnSubtitulo {
+    width: 10%;
+}
+
+.fondo {
+    position: absolute;
+    width: 280px;
+    height: 39px;
+    left: -34px;
+    top: 135px;
+    background: #C6FFCB;
+    filter: blur(9px);
+}
