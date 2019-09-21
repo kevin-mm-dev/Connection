@@ -41,11 +41,12 @@ $textoBlanco:#E1E1E1;
     font-size: .9rem;
 }
 
-.txtTitulo {
-    margin: 10px;
-    font-size: 2.4rem;
-}
-
+// .txtTitulo {
+//     margin-top: 0px;
+//     margin: 10px;
+//     font-size: 2.4rem;
+//     position: absolute;
+// }
 //////////////////////////////   ELEMENTOS EXTRAS
 hr {
     height: 2.5px;
@@ -53,16 +54,6 @@ hr {
     margin: 0%;
 }
 
-#lnSubtitulo {
-    width: 10%;
-}
-
-.fondo {
-    position: absolute;
-    width: 280px;
-    height: 39px;
-    left: -34px;
-    top: 135px;
-    background: #C6FFCB;
-    filter: blur(9px);
-}
+// #lnSubtitulo {
+//     width: 10%;
+// }

@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "bulma": "^0.7.5",
+    "jspdf": "^1.5.3",
+    "jspdf-autotable": "^3.2.4",
     "vue": "^2.5.11"
   },
   "browserslist": [
