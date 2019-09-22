@@ -9,15 +9,30 @@
       h1 Connection
       button Log Out
     nav#menuAdmin 
+      //- .db-content  
+      //-   .columns(style="width=100%")
+      //-     .column.is-2
+      //-       img.imgModulo.opcion(src="./assets/Titulo11.png")
+      //-       a.txtInicio Inicio
+      //-       //- .Inicio
+      //-     .column.is-3.opcion
+      //-       .reportes
+      //-         img.imgModulo(src="./assets/Titulo11.png")
+      //-         a.txtReportes Reparaciones
+            
       ul
         li 
-          a Inicio
+          a.button.is-rounded.txtInicio(@click="inicio") Inicio
         li  
-          a Reparaciones
+          .reparaciones
+            //- img.imgModulo.modReparaciones(src="./assets/Titulo11.png")
+            a.button.is-rounded.txtReparaciones Reparaciones
+          //- a Reparaciones
         li
-          a Reportes
+          .reportes
+            a.button.is-rounded Reportes
         li
-          a Usuarios
+          a.button.is-rounded Usuarios
     hr
     etqAgregar
     //- .columns
@@ -41,8 +56,8 @@ export default {
     }
   },
   methods:{
-    saludar(){
-      alert("Esto es un metodo");
+    inicio(){
+      alert("Estas en inicio");
     },
     //  exportar(){
        
@@ -65,4 +80,19 @@ export default {
 
 <style lang="scss">
   @import './scss/main.scss';
+.txtReportes{
+  background: peru;
+}
+.column a{
+  list-style: none;
+  color: white;
+}
+.imgModulo{
+    height: 33px;
+}
+#menuAdmin li a{
+  background: $button-hover-border-color;
+  height:23px;
+}
+
 </style>
