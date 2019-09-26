@@ -32,7 +32,7 @@ $textoBlanco:#E1E1E1;
 
 #menuAdmin li a:hover {
     // background: $fondoBarra;
-    box-shadow: 5px 5px 6px black;
+    box-shadow: black 2px 4px 10px;
 }
 
 #menuAdmin {
@@ -48,6 +48,63 @@ $textoBlanco:#E1E1E1;
 //     font-size: 2.4rem;
 //     position: absolute;
 // }
+///////////////////////////     Elementos de Componentes compartidos
+.txtTitulo {
+    color: $fondoBarra;
+    font-size: 2.4rem;
+    margin-left: 50px;
+    position: absolute;
+    top: 110px;
+}
+
+.fondoTitulo {
+    position: absolute;
+    width: 185px;
+    height: 36px;
+    left: -34px;
+    top: 127px;
+    background: #C6FFCB;
+    filter: blur(9px);
+}
+
+hr.txtTitulo {
+    height: .2rem;
+    background: #4D4A4A;
+    margin: 0%;
+    width: 290px;
+    top: 11rem;
+}
+
+.txtSubTitulo {
+    margin-left: 410px;
+    position: absolute;
+    background: #a7ff8a;
+    padding: 10px;
+    font-size: 20px;
+    font-family: sans-serif;
+    border: solid;
+    border-radius: 5px;
+}
+
+.subCliente {
+    top: 14rem;
+}
+
+.subEquipo {
+    top: 32.5rem;
+}
+
+.footer {
+    background: $fondoBarra;
+    padding: 10px;
+}
+
+.guardar {
+    width: 45rem;
+    // margin-left: 160px;
+    margin: auto;
+}
+
 //////////////////////////////   ELEMENTOS EXTRAS
 hr {
     height: 2.5px;

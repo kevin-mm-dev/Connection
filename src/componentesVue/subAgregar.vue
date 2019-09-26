@@ -6,68 +6,79 @@
     hr.txtTitulo
     h2.txtSubTitulo.subCliente Cliente
     br
-    .marco.marco1
-      .bd-content(style ="width:100%;")
-        .columns
-          .column.is-half
-            .field
-              label.label Celular
-              .control
-                input.input.is-rounded(v-model="celular" name="cel" type="tel" placeholder="" )
-                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-          .column
-            .field
-              label.label Telefono de Casa
-              .control
-                input.input(v-model="telefono" name="tel" type="tel" placeholder="" )
-                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-        .columns
-          .column
-            .field
-              label.label Nombre
-              .control
-                input.input(v-model="nombre" name="name" type="text" placeholder="" )
-    br
-    br
-    br
-    h2.txtSubTitulo.subEquipo Equipo
-    .marco.marco2
-      .bd-content(style ="width:100%;")
-        .columns
-          .column.is-half
-            .field
-              label.label IMEI o (SIM)
-              .control
-                input.input(v-model="celular" name="marca" type="text" placeholder="" )
-                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-              //- br
-              label.label Marca
-              .control
-                input.input(v-model="nombre" name="modelo" type="text" placeholder="")
-              //- br
-              //- label.label IMEI o (SIM)
-              //- .control
-              //-   input.input(v-model="nombre" name="modelo" type="text" placeholder="")  
-          .column.is-half
-            .field
-              label.label Accesorios
-              .control
-                textarea.textarea.is-warning(v-model="acces" name="accesorios" placeholder="...")
-        .columns
-          .column.is-full
-            .field
-              label.label Modelo
-              .control
-                input.input(v-model="nombre" name="modelo" type="text" placeholder="")
-        .columns
-          .column.is-full
-            .field
-              label.label Condiciones del Equipo
-              .control
-                textarea.textarea(v-model="cond" name="condiciones" type="text" placeholder="")
+    .paginaReporte
+      .marco.marco1
+        .bd-content(style ="width:100%;")
+          .columns
+            .column.is-half
+              .field
+                label.label Celular
+                .control
+                  input.input.is-rounded(v-model="celular" name="cel" type="tel" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+            .column
+              .field
+                label.label Telefono de Casa
+                .control
+                  input.input(v-model="telefono" name="tel" type="tel" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+          .columns
+            .column
+              .field
+                label.label Nombre
+                .control
+                  input.input(v-model="nombre" name="name" type="text" placeholder="" )
+      br
+      br
+      br
+      h2.txtSubTitulo.subEquipo Equipo
+      .marco.marco2
+        .bd-content(style ="width:100%;")
+          .columns
+            .column.is-half
+              .field
+                label.label IMEI o (SIM)
+                .control
+                  input.input(v-model="celular" name="marca" type="text" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                //- br
+                label.label Marca
+                .control
+                  input.input(v-model="nombre" name="modelo" type="text" placeholder="")
+                //- br
+                //- label.label IMEI o (SIM)
+                //- .control
+                //-   input.input(v-model="nombre" name="modelo" type="text" placeholder="")  
+            .column.is-half
+              .field
+                label.label Accesorios
+                .control
+                  textarea.textarea.is-warning(v-model="acces" name="accesorios" placeholder="...")
+          .columns
+            .column.is-full
+              .field
+                label.label Modelo
+                .control
+                  input.input(v-model="nombre" name="modelo" type="text" placeholder="")
+          .columns
+            .column.is-full
+              .field
+                label.label Condiciones del Equipo
+                .control
+                  textarea.textarea(v-model="cond" name="condiciones" type="text" placeholder="")
+          .columns
+            .column.is-full
+              .field
+                label.label Fallas del Equipo
+                .control
+                  textarea.textarea(v-model="cond" name="condiciones" type="text" placeholder="")      
     
     br
-    a.button.is-success.guardar Guardar                
+    .guardar
+      a.button.is-success.guardar  
+        span.icon.is-small
+          i.fas.fa-check
+        span Guardar               
     br                
     br                
     br                
@@ -135,75 +146,37 @@ export default {
 html{
   background: $grey-lighter;
 }
-.txtTitulo {
-    color: $fondoBarra;
-    font-size: 2.4rem;
-    margin-left: 50px;
-    position: absolute;
-    top:110px;
-}
-
-.fondoTitulo {
-    position: absolute;
-    width: 185px;
-    height: 36px;
-    left: -34px;
-    top: 127px;
-    background: #C6FFCB;
-    filter: blur(9px);
-}
-hr.txtTitulo {
-    height: .2rem;
-    background: #4D4A4A;
-    margin: 0%;
-    width: 290px;
-    top: 11rem;
-}
-
-.txtSubTitulo{
-  margin-left: 215px;
-    position: absolute;
-    background: #a7ff8a;
-    padding: 10px;
-    font-size: 20px;
-    font-family: sans-serif;
-    border: solid;
-    border-radius: 5px;
-}
-.subCliente{
-  top: 14rem;
-  
-}
-.subEquipo{
-    top: 32.5rem;
-}
-.footer{
-  background: $fondoBarra;
-  padding: 10px;
-}
-.guardar{
-  width: 45rem;
-    margin-left: 160px;
-}
 
 //////////////////////////  EXTRAS
 .marco{
     border-radius: 4px;
     border: solid;
     background: hsl(0, 0%, 94%);
+    
+}
+body
+{
+    // text-align: center;
+    // // display: flex;
+    justify-content: center;
+    align-items: center; 
 }
 
 .marco1{
+    // margin: auto;
+    // position: relative;
+    // position: absolute;
     height: 14rem;
     width: 45rem;
-    margin-left: 10rem;
+    // margin-left: 10rem;
+    margin: auto;
     margin-top: 8rem;
     padding: 25px;
 }
 .marco2{
-    height: 34rem;
+    height: 41rem;
     width: 45rem;
-    margin-left: 10rem;
+    margin: auto;
     padding: 25px;
     
 }

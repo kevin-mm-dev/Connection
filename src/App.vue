@@ -22,19 +22,18 @@
             
       ul
         li 
-          a.button.is-rounded.txtInicio(@click="inicio") Inicio
+          a.button.is-rounded#btnInicio(@click="metodInicio") Inicio
         li  
           .reparaciones
-            //- img.imgModulo.modReparaciones(src="./assets/Titulo11.png")
-            a.button.is-rounded.txtReparaciones Reparaciones
-          //- a Reparaciones
+            a.button.is-rounded#btnReparaciones(@click="metodReparaciones") Reparaciones
         li
           .reportes
-            a.button.is-rounded Reportes
+            a.button.is-rounded#btnReportes(@click="metodReportes") Reportes
         li
-          a.button.is-rounded Usuarios
+          a.button.is-rounded#btnUsarios(@click="metodUsuarios") Usuarios
     hr
-    etqAgregar
+    etqAgregar(v-if="bolAgregar")
+    etqRegistroUsuario(v-if="bolRegistrarUsuario")
     //- .columns
     //-   .column.is-half A la mera mitad
 
@@ -44,11 +43,15 @@
 // import './assets/scss/main.scss'
 import jsPDF from 'jspdf'
 import subAgregar from './componentesVue/subAgregar.vue'
+import registroUsuario from './componentesVue/registroUsuario.vue'
 export default {
   name: 'app',
   data () {
     return {
       mensaje: 'Que pasa mi amigo',
+      medidasSobra:"5px 5px 6px black",
+      bolAgregar:true,
+      bolRegistrarUsuario:false,
       tablaImprimir:[
         {titulo:'titulo 1', mensaje:'desc1'},
         {titulo:'titulo 2', mensaje:'desc2'},
@@ -56,8 +59,52 @@ export default {
     }
   },
   methods:{
-    inicio(){
-      alert("Estas en inicio");
+    metodInicio(){
+      var btnInicio = document.getElementById("btnInicio");
+      btnInicio.style.boxShadow="5px 5px 6px black";
+      this.bolAgregar=true;
+      this.bolRegistrarUsuario=false;
+
+      var btnReportes = document.getElementById("btnReportes");
+      btnReportes.style.boxShadow="";
+
+      var btnReparaciones = document.getElementById("btnReparaciones");
+      btnReparaciones.style.boxShadow="";
+
+      var btnUsarios = document.getElementById("btnUsarios");
+      btnUsarios.style.boxShadow="";
+    },
+    metodReparaciones(){
+      var btnInicio = document.getElementById("btnInicio");
+      var btnReportes = document.getElementById("btnReportes");
+      var btnReparaciones = document.getElementById("btnReparaciones");
+      var btnUsarios = document.getElementById("btnUsarios");
+      btnReparaciones.style.boxShadow="5px 5px 6px black";
+      btnInicio.style.boxShadow="";
+      btnReportes.style.boxShadow="";
+      btnUsarios.style.boxShadow="";
+    },
+    metodReportes(){
+      var btnInicio = document.getElementById("btnInicio");
+      var btnReportes = document.getElementById("btnReportes");
+      var btnReparaciones = document.getElementById("btnReparaciones");
+      var btnUsarios = document.getElementById("btnUsarios");
+      btnReportes.style.boxShadow="5px 5px 6px black";
+      btnInicio.style.boxShadow="";
+      btnReparaciones.style.boxShadow="";
+      btnUsarios.style.boxShadow="";
+    },
+    metodUsuarios(){
+      var btnInicio = document.getElementById("btnInicio");
+      var btnReportes = document.getElementById("btnReportes");
+      var btnReparaciones = document.getElementById("btnReparaciones");
+      var btnUsarios = document.getElementById("btnUsarios");
+      this.bolRegistrarUsuario=true;
+      this.bolAgregar=false;
+      btnReportes.style.boxShadow="";
+      btnInicio.style.boxShadow="";
+      btnReparaciones.style.boxShadow="";
+      btnUsarios.style.boxShadow="5px 5px 6px black";
     },
     //  exportar(){
        
@@ -73,7 +120,8 @@ export default {
     // }
   },
   components:{
-    etqAgregar:subAgregar
+    etqAgregar:subAgregar,
+    etqRegistroUsuario:registroUsuario
   }
 }
 </script>
@@ -94,5 +142,8 @@ export default {
   background: $button-hover-border-color;
   height:23px;
 }
-
+.estar{
+  box-shadow: 5px 5px 6px black;
+  background: red;
+}
 </style>

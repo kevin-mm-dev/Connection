@@ -2,6 +2,7 @@ var path = require('path')
 var webpack = require('webpack')
     // var jsPDF = require('jspdf');
 
+
 module.exports = {
     entry: './src/main.js',
     output: {
