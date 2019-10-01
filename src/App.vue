@@ -41,6 +41,22 @@
 
 <script>
 // import './assets/scss/main.scss'
+
+import Firebase from 'firebase';
+import config from './config';
+let app = Firebase.initializeApp(config);
+let db = app.database();
+let usuariosRef = db.ref('usuarios');
+
+
+
+
+
+
+
+
+
+
 import jsPDF from 'jspdf'
 import subAgregar from './componentesVue/subAgregar.vue'
 import registroUsuario from './componentesVue/registroUsuario.vue'
@@ -128,6 +144,13 @@ export default {
 
 <style lang="scss">
   @import './scss/main.scss';
+//  #app{
+//   background: url("fondo.jpeg");
+
+//  }
+
+
+
 .txtReportes{
   background: peru;
 }

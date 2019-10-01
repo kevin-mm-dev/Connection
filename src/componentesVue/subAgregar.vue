@@ -81,7 +81,8 @@
         span Guardar               
     br                
     br                
-    br                
+    br
+    .pound                
     img.imgFooter(src="../assets/celular.png")
     footer.footer
       .content.has-text-centered
@@ -149,7 +150,7 @@ html{
 
 //////////////////////////  EXTRAS
 .marco{
-    border-radius: 4px;
+  border-radius: 4px;
     border: solid;
     background: hsl(0, 0%, 94%);
     
@@ -160,10 +161,15 @@ body
     // // display: flex;
     justify-content: center;
     align-items: center; 
+    background-image: url("../assets/fond.png");
+    background-size: cover;
 }
-
+.pound{
+  
+  
+}
 .marco1{
-    // margin: auto;
+  // margin: auto;
     // position: relative;
     // position: absolute;
     height: 14rem;
