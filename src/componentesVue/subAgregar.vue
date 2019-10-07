@@ -6,7 +6,7 @@
     hr.txtTitulo
     h2.txtSubTitulo.subCliente Cliente
     br
-    .paginaReporte
+    form.paginaReporte
       .marco.marco1
         .bd-content(style ="width:100%;")
           .columns
@@ -14,20 +14,20 @@
               .field
                 label.label Celular
                 .control
-                  input.input.is-rounded(v-model="celular" name="cel" type="tel" placeholder="" )
+                  input.input.is-rounded(v-model="reportes.celular" name="cel" type="tel" placeholder="" )
                   p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
             .column
               .field
                 label.label Telefono de Casa
                 .control
-                  input.input(v-model="telefono" name="tel" type="tel" placeholder="" )
+                  input.input(v-model="reportes.telefono" name="tel" type="tel" placeholder="" )
                   p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
           .columns
             .column
               .field
                 label.label Nombre
                 .control
-                  input.input(v-model="nombre" name="name" type="text" placeholder="" )
+                  input.input(v-model="reportes.nombre" name="name" type="text" placeholder="" )
       br
       br
       br
@@ -39,46 +39,46 @@
               .field
                 label.label IMEI o (SIM)
                 .control
-                  input.input(v-model="celular" name="marca" type="text" placeholder="" )
+                  input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" )
                   p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-                //- br
+                br
                 label.label Marca
                 .control
-                  input.input(v-model="nombre" name="modelo" type="text" placeholder="")
+                  input.input(v-model="reportes.marca" name="modelo" type="text" placeholder="")
                 //- br
                 //- label.label IMEI o (SIM)
                 //- .control
-                //-   input.input(v-model="nombre" name="modelo" type="text" placeholder="")  
+                //-   input.input(v-model="reportes.nombre" name="modelo" type="text" placeholder="")  
             .column.is-half
               .field
                 label.label Accesorios
                 .control
-                  textarea.textarea.is-warning(v-model="acces" name="accesorios" placeholder="...")
+                  textarea.textarea.is-warning(v-model="reportes.acces" name="accesorios" placeholder="...")
           .columns
             .column.is-full
               .field
                 label.label Modelo
                 .control
-                  input.input(v-model="nombre" name="modelo" type="text" placeholder="")
+                  input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="")
           .columns
             .column.is-full
               .field
                 label.label Condiciones del Equipo
                 .control
-                  textarea.textarea(v-model="cond" name="condiciones" type="text" placeholder="")
+                  textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="")
           .columns
             .column.is-full
               .field
                 label.label Fallas del Equipo
                 .control
-                  textarea.textarea(v-model="cond" name="condiciones" type="text" placeholder="")      
+                  textarea.textarea(v-model="reportes.fallas" name="condiciones" type="text" placeholder="")      
     
-    br
-    .guardar
-      a.button.is-success.guardar  
-        span.icon.is-small
-          i.fas.fa-check
-        span Guardar               
+      br
+      .guardar
+        a.button.is-success.guardar(@click="metSubmit")  
+          span.icon.is-small
+            i.fas.fa-check
+          span Guardar               
     br                
     br                
     br
@@ -122,9 +122,19 @@ export default {
   props:[],
   data (){
     return {
-      nombre:"",
-      celular:"",
-      campoCompleto:false
+      campoCompleto:false,
+        reportes:{
+        nombre:'',
+        celular:'',
+        telefono:'',
+        chip:'',
+        marca:'',
+        modelo:'',
+        fallas:'',
+        cond:'',
+        acces:'',
+        campoCompleto:false
+        }
     }
   },
   methods:{
@@ -134,6 +144,10 @@ export default {
       }else{
         this.campoCompleto=true
       }
+    },
+    metSubmit() {
+      alert('enviando...!')
+      this.$emit('agregando',this.reportes);
     }
   },
   components:{},
@@ -163,11 +177,9 @@ body
     align-items: center; 
     background-image: url("../assets/fond.png");
     background-size: cover;
+
 }
-.pound{
-  
-  
-}
+
 .marco1{
   // margin: auto;
     // position: relative;

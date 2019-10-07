@@ -32,8 +32,8 @@
         li
           a.button.is-rounded#btnUsarios(@click="metodUsuarios") Usuarios
     hr
-    etqAgregar(v-if="bolAgregar")
-    etqRegistroUsuario(v-if="bolRegistrarUsuario")
+    etqReporte(v-if="bolAgregar" v-on:agregando="metAppAgregarReporte")
+    etqRegistroUsuario(v-if="bolRegistrarUsuario" v-on:agregando="metAppAgregarUsuario")
     //- .columns
     //-   .column.is-half A la mera mitad
 
@@ -47,19 +47,13 @@ import config from './config';
 let app = Firebase.initializeApp(config);
 let db = app.database();
 let usuariosRef = db.ref('usuarios');
-
-
-
-
-
-
-
-
-
+let reportesRef = db.ref('reportes');
 
 import jsPDF from 'jspdf'
 import subAgregar from './componentesVue/subAgregar.vue'
 import registroUsuario from './componentesVue/registroUsuario.vue'
+
+
 export default {
   name: 'app',
   data () {
@@ -67,6 +61,11 @@ export default {
       mensaje: 'Que pasa mi amigo',
       medidasSobra:"5px 5px 6px black",
       bolAgregar:true,
+      usarongo:{
+        nombre:"joel",
+        usuario:"usuarioDe pRuebas",
+        contrasena:"123"
+      },
       bolRegistrarUsuario:false,
       tablaImprimir:[
         {titulo:'titulo 1', mensaje:'desc1'},
@@ -122,6 +121,15 @@ export default {
       btnReparaciones.style.boxShadow="";
       btnUsarios.style.boxShadow="5px 5px 6px black";
     },
+    metAppAgregarUsuario:function(usuario){
+      usuariosRef.push(usuario);
+    },
+    metAppAgregarReporte:function(reporte) {
+      reportesRef.push(reporte);
+      // console.log(`Quieres un reporte para ${reporte.nombre}?`);
+      
+    }
+
     //  exportar(){
        
     //   const SELF=this;
@@ -136,7 +144,7 @@ export default {
     // }
   },
   components:{
-    etqAgregar:subAgregar,
+    etqReporte:subAgregar,
     etqRegistroUsuario:registroUsuario
   }
 }

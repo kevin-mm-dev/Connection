@@ -10,33 +10,35 @@
     hr.txtTitulo
     h2.txtSubTitulo.subCliente Registro de usuarios
     br
-    .marco.marco1
-        .bd-content(style ="width:100%;")
-          .columns
-            .column.is-half
-              .field
-                label.label Usuario 
-                .control
-                  input.input.is-rounded(v-model="celular" name="usuario" type="text" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-            .column
-              .field
-                label.label Contraseña
-                .control
-                  input.input(v-model="telefono" name="contraseña" type="password" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-          .columns
-            .column
-              .field
-                label.label Nombre
-                .control
-                  input.input(v-model="nombre" name="name" type="text" placeholder="" )
-    br
-    .guardar
-      a.button.is-success.guardar  
-        span.icon.is-small
-          i.fas.fa-check
-        span Guardar 
+    
+    form.bd-content(style ="width:100%;" @submit.prevent="metSubmit")
+      .marco.marco1
+        .columns
+          .column.is-half
+            .field
+              label.label Usuario 
+              .control
+                input.input.is-rounded(v-model="usuarios.usuario" name="usuario" type="text" placeholder="" )
+                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+          .column
+            .field
+              label.label Contraseña
+              .control
+                input.input(v-model="usuarios.contrasena" name="contrasena" type="password" placeholder="" )
+                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+        .columns
+          .column
+            .field
+              label.label Nombre
+              .control
+                input.input(v-model="usuarios.nombre" name="name" type="text" placeholder="" )
+      br
+      .aceptar
+        button.button.is-success.guardarUsuario(type='submit' name='submit' value='guardar' )  
+          span.icon.is-small
+            i.fas.fa-check
+            //-  @click="metSubmit"
+          span Guardar 
     br                
     br                
     br                
@@ -44,6 +46,8 @@
     footer.footer
       .content.has-text-centered
         p
+
+    
 </template>
 
 <script>
@@ -55,12 +59,24 @@ export default {
   data () {
     return {
       mensaje: 'Que pasa mi amigo',
-      
+      campoCompleto:false,
+      usuarios:{
+        nombre: '',
+        contrasena: '',
+        usuario: ''
+      }
     }
   },
   methods:{
-    
-    
+    onchange: function(ev) {
+      
+      },
+    metSubmit() {
+      alert('enviando...!')
+      this.$emit('agregando',this.usuarios);
+    }
+
+        
   },
   components:{
     
@@ -73,5 +89,15 @@ export default {
 html{
   background: $grey-lighter;
 }
-
+.aceptar{
+  display:flex;
+  justify-content: center;
+  // align-items: center;
+    width: 65vw;
+    // margin-left: 160px;
+    margin: auto;
+}
+.guardarUsuario{
+  width: 100%;
+}
 </style>
