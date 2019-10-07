@@ -8,73 +8,56 @@
     br
     form.paginaReporte
       .marco.marco1
-        .bd-content(style ="width:100%;")
+        //- .bd-content(style ="width:100%;")
+        .field
           .columns
             .column.is-half
               .field
-                label.label Celular
-                .control
-                  input.input.is-rounded(v-model="reportes.celular" name="cel" type="tel" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-            .column
+                .control.control
+                  label.label Celular :
+                    input.input(v-model="reportes.celular" name="cel" type="tel" placeholder="" )
+                    p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+            .column.is-half
               .field
-                label.label Telefono de Casa
-                .control
-                  input.input(v-model="reportes.telefono" name="tel" type="tel" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-          .columns
-            .column
-              .field
-                label.label Nombre
-                .control
-                  input.input(v-model="reportes.nombre" name="name" type="text" placeholder="" )
+                .control.control
+                  label.label.telefono Telefono de Casa :
+                    input.input(v-model="reportes.telefono" name="tel" type="tel" placeholder="" )
+                    p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+          .control
+            label.label Nombre :
+              .control
+                input.input(v-model="reportes.nombre" name="name" type="text" placeholder="" )
       br
       br
+      h2.txtSubTitulo.subEquipo Equipo 
       br
-      h2.txtSubTitulo.subEquipo Equipo
       .marco.marco2
         .bd-content(style ="width:100%;")
           .columns
             .column.is-half
               .field
-                label.label IMEI o (SIM)
                 .control
-                  input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-                br
-                label.label Marca
-                .control
-                  input.input(v-model="reportes.marca" name="modelo" type="text" placeholder="")
-                //- br
-                //- label.label IMEI o (SIM)
-                //- .control
-                //-   input.input(v-model="reportes.nombre" name="modelo" type="text" placeholder="")  
+                  label.label IMEI o (SIM) :
+                    input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" )
+                    p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                  label.label Marca :
+                    input.input(v-model="reportes.marca" name="modelo" type="text" placeholder="")
             .column.is-half
               .field
-                label.label Accesorios
                 .control
-                  textarea.textarea.is-warning(v-model="reportes.acces" name="accesorios" placeholder="...")
-          .columns
-            .column.is-full
-              .field
-                label.label Modelo
-                .control
-                  input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="")
-          .columns
-            .column.is-full
-              .field
-                label.label Condiciones del Equipo
-                .control
-                  textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="")
-          .columns
-            .column.is-full
-              .field
-                label.label Fallas del Equipo
-                .control
-                  textarea.textarea(v-model="reportes.fallas" name="condiciones" type="text" placeholder="")      
+                  label.label Accesorios :
+                    textarea.textarea.is-warning(v-model="reportes.acces" name="accesorios" placeholder="...")
+          .field
+            .control
+              label.label Modelo :
+                input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="")
+              label.label Condiciones del Equipo :
+                textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="")
+              label.label Fallas del Equipo :
+                textarea.textarea(v-model="reportes.fallas" name="condiciones" type="text" placeholder="")      
     
       br
-      .guardar
+      .btnAceptar
         a.button.is-success.guardar(@click="metSubmit")  
           span.icon.is-small
             i.fas.fa-check
@@ -169,6 +152,14 @@ html{
     background: hsl(0, 0%, 94%);
     
 }
+.cliente{
+  display: flex;
+  // flex-wrap: 10px;
+  justify-content: space-between;
+  align-content: flex-start; 
+  margin: auto;
+  // margin-right: 1rem;
+}
 body
 {
     // text-align: center;
@@ -181,19 +172,16 @@ body
 }
 
 .marco1{
-  // margin: auto;
-    // position: relative;
-    // position: absolute;
-    height: 14rem;
-    width: 45rem;
+    // height: 11rem;
+    width: 65vw;
     // margin-left: 10rem;
     margin: auto;
     margin-top: 8rem;
     padding: 25px;
 }
 .marco2{
-    height: 41rem;
-    width: 45rem;
+    // height: 37rem;
+    width: 65vw;
     margin: auto;
     padding: 25px;
     

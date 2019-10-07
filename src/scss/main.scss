@@ -76,7 +76,7 @@ hr.txtTitulo {
 }
 
 .txtSubTitulo {
-    margin-left: 410px;
+    margin-left: 30vw;
     position: absolute;
     background: #a7ff8a;
     padding: 10px;
@@ -90,8 +90,13 @@ hr.txtTitulo {
     top: 14rem;
 }
 
-.subEquipo {
-    top: 32.5rem;
+.btnAceptar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: space-around;
+    width: 65vw;
+    margin: auto;
 }
 
 .footer {

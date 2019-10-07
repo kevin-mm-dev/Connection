@@ -22,7 +22,7 @@
             
       ul
         li 
-          a.button.is-rounded#btnInicio(@click="metodInicio") Inicio
+          a.button.is-rounded#btnInicio(@click="metodInicio" style="boxShadow:5px 5px 6px black;") Inicio
         li  
           .reparaciones
             a.button.is-rounded#btnReparaciones(@click="metodReparaciones") Reparaciones

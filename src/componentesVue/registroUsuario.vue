@@ -16,24 +16,22 @@
         .columns
           .column.is-half
             .field
-              label.label Usuario 
               .control
-                input.input.is-rounded(v-model="usuarios.usuario" name="usuario" type="text" placeholder="" )
-                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                label.label Usuario :
+                  input.input.is-rounded(v-model="usuarios.usuario" name="usuario" type="text" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
           .column
             .field
-              label.label Contraseña
               .control
-                input.input(v-model="usuarios.contrasena" name="contrasena" type="password" placeholder="" )
-                p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-        .columns
-          .column
-            .field
-              label.label Nombre
-              .control
-                input.input(v-model="usuarios.nombre" name="name" type="text" placeholder="" )
+                label.label Contraseña :
+                  input.input(v-model="usuarios.contrasena" name="contrasena" type="password" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+        .field
+          .control
+            label.label Nombre :
+              input.input(v-model="usuarios.nombre" name="name" type="text" placeholder="" )
       br
-      .aceptar
+      .btnAceptar
         button.button.is-success.guardarUsuario(type='submit' name='submit' value='guardar' )  
           span.icon.is-small
             i.fas.fa-check
@@ -89,14 +87,7 @@ export default {
 html{
   background: $grey-lighter;
 }
-.aceptar{
-  display:flex;
-  justify-content: center;
-  // align-items: center;
-    width: 65vw;
-    // margin-left: 160px;
-    margin: auto;
-}
+
 .guardarUsuario{
   width: 100%;
 }
