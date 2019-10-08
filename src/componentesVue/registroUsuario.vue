@@ -70,7 +70,7 @@ export default {
       
       },
     metSubmit() {
-      alert('enviando...!')
+      // alert('enviando...!')
       this.$emit('agregando',this.usuarios);
     }
 

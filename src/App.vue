@@ -41,6 +41,7 @@
 
 <script>
 // import './assets/scss/main.scss'
+import toastr from 'toastr';
 
 import Firebase from 'firebase';
 import config from './config';
@@ -61,11 +62,6 @@ export default {
       mensaje: 'Que pasa mi amigo',
       medidasSobra:"5px 5px 6px black",
       bolAgregar:true,
-      usarongo:{
-        nombre:"joel",
-        usuario:"usuarioDe pRuebas",
-        contrasena:"123"
-      },
       bolRegistrarUsuario:false,
       tablaImprimir:[
         {titulo:'titulo 1', mensaje:'desc1'},
@@ -121,13 +117,45 @@ export default {
       btnReparaciones.style.boxShadow="";
       btnUsarios.style.boxShadow="5px 5px 6px black";
     },
+    prmUsario(params){
+      return new Promise((resolver, rechazar) => {
+              console.log('Inicial');
+              usuariosRef.push(params,function(params) {
+                resolver(params);
+              }) 
+                
+            })
+            .then((params) => {
+                throw new Error('Algo falló');
+                    
+                console.log('Haz esto');
+            })
+            .catch(() => {
+                console.log('Haz eso');
+            })
+    },
     metAppAgregarUsuario:function(usuario){
-      usuariosRef.push(usuario);
+      try {
+        debugger;
+        if(usuariosRef.push(usuario)){
+          this.msgGuardado();
+        }
+        
+      } catch (error) {
+        this.msgError();
+        
+      }
     },
     metAppAgregarReporte:function(reporte) {
       reportesRef.push(reporte);
-      // console.log(`Quieres un reporte para ${reporte.nombre}?`);
-      
+      this.msgGuardado();
+    },
+    msgGuardado(){
+      toastr.success('Guardado exitosamente!!');
+    },
+    msgError()
+    {
+      toastr.error('Hubo un error al intentar la operación :(');
     }
 
     //  exportar(){
@@ -146,7 +174,13 @@ export default {
   components:{
     etqReporte:subAgregar,
     etqRegistroUsuario:registroUsuario
-  }
+  },
+  firebase:{
+  usuarios : usuariosRef
+  },
+
+
+
 }
 </script>
 
