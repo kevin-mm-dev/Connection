@@ -1,59 +1,70 @@
-<!--
-    img(src="./assets/logo.png")
-    h1 {{mensaje}}
--->
-
 <template lang="pug">
   #app
     nav#principal
-      h1 Connection
-      button Log Out
-    nav#menuAdmin 
-      //- .db-content  
-      //-   .columns(style="width=100%")
-      //-     .column.is-2
-      //-       img.imgModulo.opcion(src="./assets/Titulo11.png")
-      //-       a.txtInicio Inicio
-      //-       //- .Inicio
-      //-     .column.is-3.opcion
-      //-       .reportes
-      //-         img.imgModulo(src="./assets/Titulo11.png")
-      //-         a.txtReportes Reparaciones
-            
-      ul
-        li 
-          a.button.is-rounded#btnInicio(@click="metodInicio" style="boxShadow:5px 5px 6px black;") Inicio
-        li  
-          .reparaciones
-            a.button.is-rounded#btnReparaciones(@click="metodReparaciones") Reparaciones
-        li
-          .reportes
-            a.button.is-rounded#btnReportes(@click="metodReportes") Reportes
-        li
-          a.button.is-rounded#btnUsarios(@click="metodUsuarios") Usuarios
-    hr
-    etqReporte(v-if="bolAgregar" v-on:agregando="metAppAgregarReporte")
+        h1 Connection
+        button#btncerrarSesion.button(v-if="bolBarraAdmin" @click="cerrarSesion") 
+       
+        //- Cerrar Sesión
+    etqbarraAdmin(v-if="bolBarraAdmin" v-on:cambiando="cambiarEtiqueta")
+    etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
+    etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-on:agregando="metAppAgregarUsuario")
     //- .columns
-    //-   .column.is-half A la mera mitad
+    //- .column.is-half A la mera mitad
+    
 
 </template>
 
 <script>
 // import './assets/scss/main.scss'
-import toastr from 'toastr';
+//////////////------ COMPONENTES
+import barraAdmin from './componentesVue/barraAdmin.vue'
+import subAgregar from './componentesVue/subAgregar.vue'
+import registroUsuario from './componentesVue/registroUsuario.vue'
+import login from './componentesVue/login.vue'
 
+import toastr from 'toastr';
 import Firebase from 'firebase';
 import config from './config';
+
 let app = Firebase.initializeApp(config);
 let db = app.database();
 let usuariosRef = db.ref('usuarios');
 let reportesRef = db.ref('reportes');
+let sesion=true;
+let saludar= function(){
+  alert("Saluda desde fuera");
+}
+// import jsPDF from 'jspdf'
 
-import jsPDF from 'jspdf'
-import subAgregar from './componentesVue/subAgregar.vue'
-import registroUsuario from './componentesVue/registroUsuario.vue'
 
+
+function observador(){
+  Firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    var displayName = user.displayName;
+    var email = user.email;
+    console.log(`Estas adentro ${email}`);
+    var emailVerified = user.emailVerified;
+    var photoURL = user.photoURL;
+    var isAnonymous = user.isAnonymous;
+    var uid = user.uid;
+    var providerData = user.providerData;
+    var contenido = document.getElementById('contenido');
+    sesion=true;
+    // ...
+  } else {
+    console.log(`No estas logeado`);
+    sesion=false;
+    
+    // User is signed out.
+    // ...
+  }
+});
+}
+observador();
+// saludar();
 
 export default {
   name: 'app',
@@ -61,8 +72,13 @@ export default {
     return {
       mensaje: 'Que pasa mi amigo',
       medidasSobra:"5px 5px 6px black",
-      bolAgregar:true,
+      vacio:"",
+      bolBarraAdmin:true,
+      bolLogin:false,
+      bolForm:true,
       bolRegistrarUsuario:false,
+      bolReparaciones:false,
+      bolReportes:false,
       tablaImprimir:[
         {titulo:'titulo 1', mensaje:'desc1'},
         {titulo:'titulo 2', mensaje:'desc2'},
@@ -70,81 +86,91 @@ export default {
     }
   },
   methods:{
-    metodInicio(){
-      var btnInicio = document.getElementById("btnInicio");
-      btnInicio.style.boxShadow="5px 5px 6px black";
-      this.bolAgregar=true;
+    cambiarEtiqueta(modulo){
+      switch(modulo)
+      {
+        case 'inicio':
+          this.limpiarEtiquetas();
+          this.bolForm=true;
+
+          break;
+        case 'reparaciones':
+          this.limpiarEtiquetas();
+          this.bolReparaciones=true;
+          
+          break;
+        case 'reportes':
+          this.limpiarEtiquetas();
+          this.bolReportes=true;
+          
+          break;
+        case 'usuarios':
+          this.limpiarEtiquetas();
+          this.bolRegistrarUsuario=true;
+          // alert("Que haciendo");
+          
+          break;
+      }
+    },
+    limpiarEtiquetas(){
+      this.bolLogin=false;
+      this.bolForm=false;
       this.bolRegistrarUsuario=false;
-
-      var btnReportes = document.getElementById("btnReportes");
-      btnReportes.style.boxShadow="";
-
-      var btnReparaciones = document.getElementById("btnReparaciones");
-      btnReparaciones.style.boxShadow="";
-
-      var btnUsarios = document.getElementById("btnUsarios");
-      btnUsarios.style.boxShadow="";
+      this.bolReparaciones=false;
+      this.bolReportes=false;
     },
-    metodReparaciones(){
-      var btnInicio = document.getElementById("btnInicio");
-      var btnReportes = document.getElementById("btnReportes");
-      var btnReparaciones = document.getElementById("btnReparaciones");
-      var btnUsarios = document.getElementById("btnUsarios");
-      btnReparaciones.style.boxShadow="5px 5px 6px black";
-      btnInicio.style.boxShadow="";
-      btnReportes.style.boxShadow="";
-      btnUsarios.style.boxShadow="";
+    ingresar(){
+      this.bolLogin=true;  
+      this.bolBarraAdmin=true;
     },
-    metodReportes(){
-      var btnInicio = document.getElementById("btnInicio");
-      var btnReportes = document.getElementById("btnReportes");
-      var btnReparaciones = document.getElementById("btnReparaciones");
-      var btnUsarios = document.getElementById("btnUsarios");
-      btnReportes.style.boxShadow="5px 5px 6px black";
-      btnInicio.style.boxShadow="";
-      btnReparaciones.style.boxShadow="";
-      btnUsarios.style.boxShadow="";
-    },
-    metodUsuarios(){
-      var btnInicio = document.getElementById("btnInicio");
-      var btnReportes = document.getElementById("btnReportes");
-      var btnReparaciones = document.getElementById("btnReparaciones");
-      var btnUsarios = document.getElementById("btnUsarios");
-      this.bolRegistrarUsuario=true;
-      this.bolAgregar=false;
-      btnReportes.style.boxShadow="";
-      btnInicio.style.boxShadow="";
-      btnReparaciones.style.boxShadow="";
-      btnUsarios.style.boxShadow="5px 5px 6px black";
-    },
-    prmUsario(params){
-      return new Promise((resolver, rechazar) => {
-              console.log('Inicial');
-              usuariosRef.push(params,function(params) {
-                resolver(params);
-              }) 
-                
-            })
-            .then((params) => {
-                throw new Error('Algo falló');
-                    
-                console.log('Haz esto');
-            })
-            .catch(() => {
-                console.log('Haz eso');
-            })
+    cerrarSesion(){
+      // saludar=function(){
+      //   alert("Cambiado");
+      // }
+      // saludar();
+      this.limpiarEtiquetas();
+      this.bolLogin=true;
+      this.bolBarraAdmin=false;
+      Firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        console.log("Saliendo...");
+        
+      }).catch(function(error) {
+        console.log("Error en la salida --"+error.message);
+        // An error happened.
+      });
+      
     },
     metAppAgregarUsuario:function(usuario){
-      try {
-        debugger;
-        if(usuariosRef.push(usuario)){
-          this.msgGuardado();
-        }
-        
-      } catch (error) {
-        this.msgError();
-        
-      }
+      const SELF=this;    
+      Firebase.auth().createUserWithEmailAndPassword(usuario.email, usuario.contrasena)
+      .then(function(){
+        this.verificar();
+        SELF.msgGuardado();
+      })
+      .catch(function(error) {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        SELF.msgError(errorMessage);
+        // ...
+      });
+    },
+    metAppIniciarSesion:function (usuario) {
+      console.log(`Llego padre ${usuario.email} y ${usuario.contrasena} `);
+      const SELF= this;
+      Firebase.auth().signInWithEmailAndPassword(usuario.email, usuario.contrasena)
+      .then(function(){
+        SELF.bolForm=true;
+
+        SELF.bolBarraAdmin=true;
+
+        SELF.bolLogin=false;
+      })
+      .catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+      SELF.msgError(errorMessage);
+    });
     },
     metAppAgregarReporte:function(reporte) {
       reportesRef.push(reporte);
@@ -153,27 +179,29 @@ export default {
     msgGuardado(){
       toastr.success('Guardado exitosamente!!');
     },
-    msgError()
+    msgError(msg)
     {
-      toastr.error('Hubo un error al intentar la operación :(');
-    }
-
-    //  exportar(){
-       
-    //   const SELF=this;
-    //   var columnas=[
-    //     {titulo:"aquiTitulo", datakey:"titukey"},
-    //     {titulo:"mensajes", datakey:"menskey"}
-    //   ];
-    //   var doc=new jsPDF('p','pt');
-    //   doc.autoTable(columnas, SELF.tablaImprimir);
-    //   doc.save('aquitudoc.pdf');
-
-    // }
+      toastr.error(`Hubo un error al intentar la operación --
+        ${msg}` );
+    },
+    // validar(){
+    //   var user = firebase.auth().currentUser;
+    //   user.sendEmailVerification().then(function() {
+    //     // Sign-out successful.
+    //     console.log("Enviando correo");
+        
+    //   }).catch(function(error) {
+    //     // An error happened.
+    //     console.log(`Erro en enviar verificacion ${error}`);
+        
+    //   });
+    // },
   },
   components:{
-    etqReporte:subAgregar,
-    etqRegistroUsuario:registroUsuario
+    etqFormulario:subAgregar,
+    etqRegistroUsuario:registroUsuario,
+    etqLogin:login,
+    etqbarraAdmin:barraAdmin,
   },
   firebase:{
   usuarios : usuariosRef
@@ -203,12 +231,19 @@ export default {
 .imgModulo{
     height: 33px;
 }
-#menuAdmin li a{
-  background: $button-hover-border-color;
-  height:23px;
+#btncerrarSesion{
+  border-style: none;
+  background: url("./assets/cerrar.png");
+  background-size: 100%;
+  width: 52px;
+  height: 52px;
 }
-.estar{
-  box-shadow: 5px 5px 6px black;
-  background: red;
-}
+// #menuAdmin li a{
+//   background: $button-hover-border-color;
+//   height:23px;
+// }
+// .estar{
+//   box-shadow: 5px 5px 6px black;
+//   background: red;
+// }
 </style>

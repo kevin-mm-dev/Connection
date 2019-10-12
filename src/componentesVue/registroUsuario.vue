@@ -13,26 +13,27 @@
     
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit")
       .marco.marco1
+        .field
+          .control
+            label.label Correo Electronico :
+              input.input(v-model="usuarios.email" name="email" type="email" placeholder="" )
         .columns
           .column.is-half
-            .field
-              .control
-                label.label Usuario :
-                  input.input.is-rounded(v-model="usuarios.usuario" name="usuario" type="text" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-          .column
             .field
               .control
                 label.label Contraseña :
                   input.input(v-model="usuarios.contrasena" name="contrasena" type="password" placeholder="" )
                   p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-        .field
-          .control
-            label.label Nombre :
-              input.input(v-model="usuarios.nombre" name="name" type="text" placeholder="" )
+          .column
+            .field
+              .control
+                label.label Confirmar Contraseña :
+                  input.input(v-model="confContrasena" name="contrasena2" type="password" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                  p.help.is-danger(v-if="campoIgual") Este campo no concuerda con el anterior
       br
       .btnAceptar
-        button.button.is-success.guardarUsuario(type='submit' name='submit' value='guardar' )  
+        button.button.is-success.btnCien.btnAceptar(type='submit' name='submit' value='guardar' )  
           span.icon.is-small
             i.fas.fa-check
             //-  @click="metSubmit"
@@ -57,11 +58,12 @@ export default {
   data () {
     return {
       mensaje: 'Que pasa mi amigo',
+      campoIgual:false,
       campoCompleto:false,
+      confContrasena:'',
       usuarios:{
-        nombre: '',
+        email: '',
         contrasena: '',
-        usuario: ''
       }
     }
   },
@@ -71,7 +73,15 @@ export default {
       },
     metSubmit() {
       // alert('enviando...!')
-      this.$emit('agregando',this.usuarios);
+      if (this.confContrasena!=this.usuarios.contrasena) {
+        console.log("No es igual");
+        this.campoIgual=true;
+      }else
+      {
+        console.log("Todo bien");
+        this.campoIgual=false;
+        this.$emit('agregando',this.usuarios);
+      }
     }
 
         
@@ -83,12 +93,29 @@ export default {
 </script>
 
 <style lang="scss">
-  @import '../scss/main.scss';
+@import '../scss/main.scss';
 html{
   background: $grey-lighter;
 }
 
-.guardarUsuario{
-  width: 100%;
+// .guardarUsuario{
+//   width: 100%;
+// }
+
+#registroUsuario
+{
+    // text-align: center;
+    // // display: flex;
+    justify-content: center;
+    align-items: center; 
+    background-image: url("../assets/fondo.png");
+    background-size: cover;
+
 }
+
+.imgFooter{
+  width: 85px;
+  
+}
+
 </style>

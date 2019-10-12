@@ -58,7 +58,7 @@
     
       br
       .btnAceptar
-        a.button.is-success.guardar(@click="metSubmit")  
+        a.button.is-success.btnCien.btnAceptar(@click="metSubmit")  
           span.icon.is-small
             i.fas.fa-check
           span Guardar               
@@ -141,17 +141,9 @@ export default {
 <style lang="scss">
 @import '../scss/main.scss';
 // @import '../../node_modules/bulma/bulma.sass';
-html{
-  background: $grey-lighter;
-}
 
 //////////////////////////  EXTRAS
-.marco{
-  border-radius: 4px;
-    border: solid;
-    background: hsl(0, 0%, 94%);
-    
-}
+
 .cliente{
   display: flex;
   // flex-wrap: 10px;
@@ -160,32 +152,14 @@ html{
   margin: auto;
   // margin-right: 1rem;
 }
-body
-{
-    // text-align: center;
-    // // display: flex;
-    justify-content: center;
-    align-items: center; 
-    background-image: url("../assets/fond.png");
-    background-size: cover;
-
+#subAgregar{
+      justify-content: center;
+    align-items: center;
+  background-image: url("../assets/papel.jpg");
+  // background-size: 30%; 
 }
 
-.marco1{
-    // height: 11rem;
-    width: 65vw;
-    // margin-left: 10rem;
-    margin: auto;
-    margin-top: 8rem;
-    padding: 25px;
-}
-.marco2{
-    // height: 37rem;
-    width: 65vw;
-    margin: auto;
-    padding: 25px;
-    
-}
+
 input.nombre{
 width: 25rem;
 }
