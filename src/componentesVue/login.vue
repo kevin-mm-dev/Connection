@@ -1,8 +1,3 @@
-<!--
-    img(src="./assets/logo.png")
-    h1 {{mensaje}}
--->
-
 <template lang="pug">
   #login
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit")
@@ -40,10 +35,7 @@
         //-     i.fas.fa-check
         //-     //-  @click="metSubmit"
         //-   span Guardar 
-
-
-
-    
+   
 </template>
 
 <script>
@@ -65,26 +57,15 @@ export default {
     }
   },
   methods:{
-    onchange: function(ev) {
+    // onchange: function(ev) {
       
-      },
+    //   },
     metSubmit() {
-      // alert('enviando...!')
-      // if (this.confContrasena!=this.usuarios.contrasena) {
-      //   console.log("No es igual");
-      //   this.campoIgual=true;
-      // }else
-      // {
         console.log("Todo bien");
         this.campoIgual=false;
         this.$emit('iniciandoSesion',this.usuarios);
       // }
     }
-
-        
-  },
-  components:{
-    
   }
 }
 </script>
@@ -121,8 +102,5 @@ html{
     margin-top: 8rem;
     padding: 25px;
     width: 35vw;
-    //     border-radius: 4px;
-    // border: solid;
-    // background: hsl(0, 0%, 94%);
 }
 </style>

@@ -2,22 +2,27 @@
   #app
     nav#principal
         h1 Connection
-        button#btncerrarSesion.button(v-if="bolBarraAdmin" @click="buscarFireBase")
+        button#btncerrarSesion.button(v-if="bolBarraAdmin" @click="cerrarSesion")
 
         //- Cerrar Sesión
-    table.table
-      thead
-        tr
-         th Usuario
-         th us.nombre
-      tbody
-        tr(v-for="us in usuarios")
-         td {{us.nombre}}
-         th 
-           button hola
+    //- table.table
+    //-   thead
+    //-     tr
+    //-       th Usuario
+    //-       th us.nombre
+    //-   tbody
+    //-     tr(v-for="us in usuarios")
+    //-       th {{us.nombre}}
+    //-       th 
+    //-         button.button.is-danger(@click="eliminar()") hey!
+    //- ul.list-group
+    //-   li(v-for='tarea in usuarios')
+    //-     p {{tarea.nombre}}
+    //-     //- p.lead(:class='{completado: tarea.completado}')
+    //-     button.button.is-danger(@click='eliminar(tarea.nombre)')
+        //- input(v-model='tarea.titulo' v-show='editandoTarea === $index' @blur='editandoTarea = null, editarTarea(tarea)' type='text')
+        //- div(v-show='tarea.uid === usuarioActivo.uid')
 
-        //- tr(v-for="us in usuarios")
-        //-  td us.nombre
     etqbarraAdmin(v-if="bolBarraAdmin" v-on:cambiando="cambiarEtiqueta")
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
@@ -50,35 +55,13 @@ var admin = require("firebase");
 // Get a database reference to our posts
 var db2 = admin.database();
 var ref = db2.ref("usuarios");
-let usuariosRef={};
-// ref.on("value", function(snapshot) {
-//   console.log("Leyendo ref");
-//   // console.log(snapshot.key());
-//   console.log(snapshot.val());
-//   usuariosRef =snapshot.val().key;
-//   console.log(usuariosRef);
 
-// }, function (errorObject) {
-//   console.log("The read failed: " + errorObject.code);
-// });
-// let reportesRef = db.ref('reportes');
-// vm.tareas='kevin';
 
 let sesion=true;
-let saludar= function(){
-  alert("Saluda desde fuera");
-}
-// import jsPDF from 'jspdf'
-// var = perfecto {
-//     nombre:"",
-//     tamanos:5
-//   };
+// let saludar= function(){
+//   alert("Saluda desde fuera");
+// }
 
-var coche =[
-  {nombre :"hola",  tamano:2},
-  {nombre :"hola2", tamano:2},
-  {nombre :"hola3", tamano:2},
-]
 function observador(){
   Firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -90,6 +73,8 @@ function observador(){
     var photoURL = user.photoURL;
     var isAnonymous = user.isAnonymous;
     var uid = user.uid;
+    console.log(`Inicio usuario, key: ${uid}`);
+    
     var providerData = user.providerData;
     var contenido = document.getElementById('contenido');
     sesion=true;
@@ -108,28 +93,14 @@ observador();
 let perfecto={};
 export default {
   name: 'app',
-  ready:function(){
-  // usuarios :usuariosRef
-  // db.ref('usuarios')
-    // usuariosF:{
-    // nombre:'kevin hola'
-    // }
-    // ref.on("value", function(snapshot) {
-    //   console.log("Leyendo ref");
-    //   // console.log(snapshot.key());
-    //   console.log(snapshot.val());
-    //   // usuariosRef =snapshot.val().key;
-    //   // console.log(usuariosRef);
-
-    // }, function (errorObject) {
-    //   console.log("The read failed: " + errorObject.code);
-    // });
-  },
   data () {
     return {
-      usuarios:[],
+      usuarios:[
+        {nombre:'kevin', edad:20},
+        {nombre:'Risas', edad:25},
+        {nombre:'Tenari', edad:26},
+      ],
       mensaje: 'Que pasa mi amigo',
-      medidasSobra:"5px 5px 6px black",
       vacio:"",
       bolBarraAdmin:true,
       bolLogin:false,
@@ -137,10 +108,6 @@ export default {
       bolRegistrarUsuario:false,
       bolReparaciones:false,
       bolReportes:false,
-      tablaImprimir:[
-        {titulo:'titulo 1', mensaje:'desc1'},
-        {titulo:'titulo 2', mensaje:'desc2'},
-      ]
     }
   },
   methods:{
@@ -160,13 +127,13 @@ export default {
       }); 
 
       }
-
-
-      // console.log(usuariosRef);
-
-    }, function (errorObject) {
-      console.log("The read failed: " + errorObject.code);
-    });
+      }, 
+      function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      });
+    },
+    fnParametro:function(indice){
+      console.log("Hola "+indice );
     },
     cambiarEtiqueta(modulo){
       switch(modulo)
@@ -225,9 +192,11 @@ export default {
     },
     metAppAgregarUsuario:function(usuario){
       const SELF=this;
-      Firebase.auth().createUserWithEmailAndPassword(usuario.email, usuario.contrasena)
-      .then(function(){
-        this.verificar();
+      Firebase.createUserWithEmailAndPassword(usuario.email, usuario.contrasena)
+      .then(function(data){
+        // this.verificar();
+        console.log(`Creaste un usuario ${data.val()}`);
+        
         SELF.msgGuardado();
       })
       .catch(function(error) {
@@ -238,15 +207,17 @@ export default {
       });
     },
     metAppIniciarSesion:function (usuario) {
-      console.log(`Llego padre ${usuario.email} y ${usuario.contrasena} `);
+      console.log(`Llego padre ${usuario} y ${usuario.email} `);
+      console.log(`Llego key: ${usuario.uid}`);
       const SELF= this;
       Firebase.auth().signInWithEmailAndPassword(usuario.email, usuario.contrasena)
-      .then(function(){
+      .then(function(data){
+        console.log(`Entrando ${data}`);
+        
         SELF.bolForm=true;
-
         SELF.bolBarraAdmin=true;
-
         SELF.bolLogin=false;
+
       })
       .catch(function(error) {
       var errorCode = error.code;

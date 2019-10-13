@@ -4,10 +4,13 @@
     .fondoTitulo
     h1.txtTitulo Inicio
     hr.txtTitulo
-    h2.txtSubTitulo.subCliente Cliente
     br
     form.paginaReporte
-      .marco.marco1
+      br
+      br
+      h2.txtSubTitulo Cliente 
+      br
+      .marco.marco2
         //- .bd-content(style ="width:100%;")
         .field
           .columns
@@ -29,7 +32,7 @@
                 input.input(v-model="reportes.nombre" name="name" type="text" placeholder="" )
       br
       br
-      h2.txtSubTitulo.subEquipo Equipo 
+      h2.txtSubTitulo Equipo 
       br
       .marco.marco2
         .bd-content(style ="width:100%;")
