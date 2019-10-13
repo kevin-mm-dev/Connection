@@ -2,16 +2,30 @@
   #app
     nav#principal
         h1 Connection
-        button#btncerrarSesion.button(v-if="bolBarraAdmin" @click="cerrarSesion") 
-       
+        button#btncerrarSesion.button(v-if="bolBarraAdmin" @click="buscarFireBase")
+
         //- Cerrar Sesión
+    table.table
+      thead
+        tr
+         th Usuario
+         th us.nombre
+      tbody
+        tr(v-for="us in usuarios")
+         td {{us.nombre}}
+         th 
+           button hola
+
+        //- tr(v-for="us in usuarios")
+        //-  td us.nombre
     etqbarraAdmin(v-if="bolBarraAdmin" v-on:cambiando="cambiarEtiqueta")
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-on:agregando="metAppAgregarUsuario")
+
     //- .columns
     //- .column.is-half A la mera mitad
-    
+
 
 </template>
 
@@ -26,19 +40,45 @@ import login from './componentesVue/login.vue'
 import toastr from 'toastr';
 import Firebase from 'firebase';
 import config from './config';
-
+  // import db from '@/firebase'
 let app = Firebase.initializeApp(config);
 let db = app.database();
-let usuariosRef = db.ref('usuarios');
-let reportesRef = db.ref('reportes');
+//db.ref('usuarios');
+
+var admin = require("firebase");
+
+// Get a database reference to our posts
+var db2 = admin.database();
+var ref = db2.ref("usuarios");
+let usuariosRef={};
+// ref.on("value", function(snapshot) {
+//   console.log("Leyendo ref");
+//   // console.log(snapshot.key());
+//   console.log(snapshot.val());
+//   usuariosRef =snapshot.val().key;
+//   console.log(usuariosRef);
+
+// }, function (errorObject) {
+//   console.log("The read failed: " + errorObject.code);
+// });
+// let reportesRef = db.ref('reportes');
+// vm.tareas='kevin';
+
 let sesion=true;
 let saludar= function(){
   alert("Saluda desde fuera");
 }
 // import jsPDF from 'jspdf'
+// var = perfecto {
+//     nombre:"",
+//     tamanos:5
+//   };
 
-
-
+var coche =[
+  {nombre :"hola",  tamano:2},
+  {nombre :"hola2", tamano:2},
+  {nombre :"hola3", tamano:2},
+]
 function observador(){
   Firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
@@ -57,7 +97,7 @@ function observador(){
   } else {
     console.log(`No estas logeado`);
     sesion=false;
-    
+
     // User is signed out.
     // ...
   }
@@ -65,11 +105,29 @@ function observador(){
 }
 observador();
 // saludar();
-
+let perfecto={};
 export default {
   name: 'app',
+  ready:function(){
+  // usuarios :usuariosRef
+  // db.ref('usuarios')
+    // usuariosF:{
+    // nombre:'kevin hola'
+    // }
+    // ref.on("value", function(snapshot) {
+    //   console.log("Leyendo ref");
+    //   // console.log(snapshot.key());
+    //   console.log(snapshot.val());
+    //   // usuariosRef =snapshot.val().key;
+    //   // console.log(usuariosRef);
+
+    // }, function (errorObject) {
+    //   console.log("The read failed: " + errorObject.code);
+    // });
+  },
   data () {
     return {
+      usuarios:[],
       mensaje: 'Que pasa mi amigo',
       medidasSobra:"5px 5px 6px black",
       vacio:"",
@@ -86,6 +144,30 @@ export default {
     }
   },
   methods:{
+    buscarFireBase(){
+    const SELF =this;
+    ref.on("value", function(snapshot) {
+      console.log("Leyendo ref");
+      console.log(snapshot.val());
+      var objeto= snapshot.val();
+      for(var propiedad in objeto)
+      {
+        SELF.usuarios.unshift({
+          '.key':propiedad,
+          nombre:objeto[propiedad].nombre,
+          contrasena:objeto[propiedad].contrasena,
+
+      }); 
+
+      }
+
+
+      // console.log(usuariosRef);
+
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+    });
+    },
     cambiarEtiqueta(modulo){
       switch(modulo)
       {
@@ -97,18 +179,18 @@ export default {
         case 'reparaciones':
           this.limpiarEtiquetas();
           this.bolReparaciones=true;
-          
+
           break;
         case 'reportes':
           this.limpiarEtiquetas();
           this.bolReportes=true;
-          
+
           break;
         case 'usuarios':
           this.limpiarEtiquetas();
           this.bolRegistrarUsuario=true;
           // alert("Que haciendo");
-          
+
           break;
       }
     },
@@ -120,7 +202,7 @@ export default {
       this.bolReportes=false;
     },
     ingresar(){
-      this.bolLogin=true;  
+      this.bolLogin=true;
       this.bolBarraAdmin=true;
     },
     cerrarSesion(){
@@ -134,15 +216,15 @@ export default {
       Firebase.auth().signOut().then(function() {
         // Sign-out successful.
         console.log("Saliendo...");
-        
+
       }).catch(function(error) {
         console.log("Error en la salida --"+error.message);
         // An error happened.
       });
-      
+
     },
     metAppAgregarUsuario:function(usuario){
-      const SELF=this;    
+      const SELF=this;
       Firebase.auth().createUserWithEmailAndPassword(usuario.email, usuario.contrasena)
       .then(function(){
         this.verificar();
@@ -189,11 +271,11 @@ export default {
     //   user.sendEmailVerification().then(function() {
     //     // Sign-out successful.
     //     console.log("Enviando correo");
-        
+
     //   }).catch(function(error) {
     //     // An error happened.
     //     console.log(`Erro en enviar verificacion ${error}`);
-        
+
     //   });
     // },
   },
@@ -202,9 +284,6 @@ export default {
     etqRegistroUsuario:registroUsuario,
     etqLogin:login,
     etqbarraAdmin:barraAdmin,
-  },
-  firebase:{
-  usuarios : usuariosRef
   },
 
 
