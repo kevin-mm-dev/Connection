@@ -8,11 +8,13 @@
     .fondoTitulo
     h1.txtTitulo Usuarios
     hr.txtTitulo
-    h2.txtSubTitulo.subCliente Registro de usuarios
     br
-    
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit")
-      .marco.marco1
+      br
+      br
+      h2.txtSubTitulo Registro de usuarios 
+      br
+      .marco.marco2
         .field
           .control
             label.label Correo Electronico :

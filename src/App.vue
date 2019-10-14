@@ -35,7 +35,7 @@
 </template>
 
 <script>
-// import './assets/scss/main.scss'
+
 //////////////------ COMPONENTES
 import barraAdmin from './componentesVue/barraAdmin.vue'
 import subAgregar from './componentesVue/subAgregar.vue'
@@ -43,56 +43,28 @@ import registroUsuario from './componentesVue/registroUsuario.vue'
 import login from './componentesVue/login.vue'
 
 import toastr from 'toastr';
-import Firebase from 'firebase';
-import config from './config';
-  // import db from '@/firebase'
-let app = Firebase.initializeApp(config);
-let db = app.database();
-//db.ref('usuarios');
+// import Firebase from 'firebase';
+import fire from './firebase.js';
+let usuarioActivo;
 
-var admin = require("firebase");
-
-// Get a database reference to our posts
-var db2 = admin.database();
-var ref = db2.ref("usuarios");
-
-
-let sesion=true;
-// let saludar= function(){
-//   alert("Saluda desde fuera");
-// }
-
-function observador(){
-  Firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-    var displayName = user.displayName;
-    var email = user.email;
-    console.log(`Estas adentro ${email}`);
-    var emailVerified = user.emailVerified;
-    var photoURL = user.photoURL;
-    var isAnonymous = user.isAnonymous;
-    var uid = user.uid;
-    console.log(`Inicio usuario, key: ${uid}`);
-    
-    var providerData = user.providerData;
-    var contenido = document.getElementById('contenido');
-    sesion=true;
-    // ...
-  } else {
-    console.log(`No estas logeado`);
-    sesion=false;
-
-    // User is signed out.
-    // ...
-  }
-});
-}
-observador();
-// saludar();
-let perfecto={};
 export default {
   name: 'app',
+  created(){
+    fire.status(function(data){
+      try{
+        usuarioActivo=data.email;
+      }catch(e){
+
+        if (usuarioActivo) {
+          console.log(`Bienvenido ${usuarioActivo}`);
+        }else{
+          console.log(`usuarioActivo esta vacio`);
+        }
+      }
+      
+    });
+    
+  },
   data () {
     return {
       usuarios:[
@@ -103,8 +75,8 @@ export default {
       mensaje: 'Que pasa mi amigo',
       vacio:"",
       bolBarraAdmin:true,
-      bolLogin:false,
-      bolForm:true,
+      bolLogin:true,
+      bolForm:false,
       bolRegistrarUsuario:false,
       bolReparaciones:false,
       bolReportes:false,
@@ -173,15 +145,13 @@ export default {
       this.bolBarraAdmin=true;
     },
     cerrarSesion(){
-      // saludar=function(){
-      //   alert("Cambiado");
-      // }
-      // saludar();
-      this.limpiarEtiquetas();
-      this.bolLogin=true;
-      this.bolBarraAdmin=false;
-      Firebase.auth().signOut().then(function() {
-        // Sign-out successful.
+      const SELF = this;
+      fire.cerrarSesion().then(function() {
+        SELF.limpiarEtiquetas();
+        SELF.bolLogin=true;
+        SELF.bolBarraAdmin=false;
+        usuarioActivo=undefined;
+          // Sign-out successful.
         console.log("Saliendo...");
 
       }).catch(function(error) {
@@ -192,28 +162,28 @@ export default {
     },
     metAppAgregarUsuario:function(usuario){
       const SELF=this;
-      Firebase.createUserWithEmailAndPassword(usuario.email, usuario.contrasena)
-      .then(function(data){
-        // this.verificar();
-        console.log(`Creaste un usuario ${data.val()}`);
-        
-        SELF.msgGuardado();
-      })
-      .catch(function(error) {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        SELF.msgError(errorMessage);
-        // ...
-      });
+      if (usuarioActivo==undefined) {
+        console.log("Los siento joven, no puede registrar usuarios ");
+        SELF.msgError(SELF.vacio);
+      }else{
+        fire.crearUsuario(usuario).then(function() {
+          SELF.msgGuardado();
+        }).catch(function(error) {
+          var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log(errorCode);
+            SELF.msgError(errorMessage);
+        });
+      }
+    
     },
     metAppIniciarSesion:function (usuario) {
-      console.log(`Llego padre ${usuario} y ${usuario.email} `);
-      console.log(`Llego key: ${usuario.uid}`);
       const SELF= this;
-      Firebase.auth().signInWithEmailAndPassword(usuario.email, usuario.contrasena)
-      .then(function(data){
-        console.log(`Entrando ${data}`);
-        
+      fire.iniciarSesion(usuario)
+      .then(function(){
+        fire.status(function(data){
+          usuarioActivo=data;
+        });
         SELF.bolForm=true;
         SELF.bolBarraAdmin=true;
         SELF.bolLogin=false;
@@ -237,18 +207,6 @@ export default {
       toastr.error(`Hubo un error al intentar la operación --
         ${msg}` );
     },
-    // validar(){
-    //   var user = firebase.auth().currentUser;
-    //   user.sendEmailVerification().then(function() {
-    //     // Sign-out successful.
-    //     console.log("Enviando correo");
-
-    //   }).catch(function(error) {
-    //     // An error happened.
-    //     console.log(`Erro en enviar verificacion ${error}`);
-
-    //   });
-    // },
   },
   components:{
     etqFormulario:subAgregar,
@@ -264,12 +222,6 @@ export default {
 
 <style lang="scss">
   @import './scss/main.scss';
-//  #app{
-//   background: url("fondo.jpeg");
-
-//  }
-
-
 
 .txtReportes{
   background: peru;
@@ -288,12 +240,5 @@ export default {
   width: 52px;
   height: 52px;
 }
-// #menuAdmin li a{
-//   background: $button-hover-border-color;
-//   height:23px;
-// }
-// .estar{
-//   box-shadow: 5px 5px 6px black;
-//   background: red;
-// }
+
 </style>

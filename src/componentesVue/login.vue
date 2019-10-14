@@ -3,12 +3,11 @@
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit")
       .marcoLogin
         .field
-          .control.has-icons-left.has-icons-right
+          .control.has-icons-left
             input.input.is-medium(v-model="usuarios.email" type='email' placeholder='Email')
             span.icon.is-left
               i.fas.fa-envelope
-            span.icon.is-right
-              i.fas.fa-check
+              
         .field
           .control.has-icons-left
             input.input.is-medium(v-model="usuarios.contrasena" type='password' placeholder='Contraseña')
