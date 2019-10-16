@@ -26,7 +26,8 @@
     etqbarraAdmin(v-if="bolBarraAdmin" v-on:cambiando="cambiarEtiqueta")
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
-    etqRegistroUsuario(v-if="bolRegistrarUsuario" v-on:agregando="metAppAgregarUsuario")
+    etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
+    v-on:mostrarUsuarios="traerUsuarios")
 
     //- .columns
     //- .column.is-half A la mera mitad
@@ -67,11 +68,7 @@ export default {
   },
   data () {
     return {
-      usuarios:[
-        {nombre:'kevin', edad:20},
-        {nombre:'Risas', edad:25},
-        {nombre:'Tenari', edad:26},
-      ],
+      usuarios:[{nombre:'kevin', edad:20}],
       mensaje: 'Que pasa mi amigo',
       vacio:"",
       bolBarraAdmin:true,
@@ -106,6 +103,22 @@ export default {
     },
     fnParametro:function(indice){
       console.log("Hola "+indice );
+    },
+    traerUsuarios(){
+      // alert("Quieres ususarios");
+      // this.usuarios.push(
+
+      //   {nombre:'Risas', edad:25},
+      //   {nombre:'Tenari', edad:26},
+      // )
+      const SELF =this;
+      fire.mostrarUsuarios().then(function(){
+            console.log("mostrando usuarios");        
+      });
+      // // fire.mostrarUsuarios(function(todosUsuarios){
+      // //   todosUsuarios=SELF.usuarios;
+      // // });
+      
     },
     cambiarEtiqueta(modulo){
       switch(modulo)
@@ -151,12 +164,10 @@ export default {
         SELF.bolLogin=true;
         SELF.bolBarraAdmin=false;
         usuarioActivo=undefined;
-          // Sign-out successful.
         console.log("Saliendo...");
 
       }).catch(function(error) {
         console.log("Error en la salida --"+error.message);
-        // An error happened.
       });
 
     },
@@ -166,14 +177,22 @@ export default {
         console.log("Los siento joven, no puede registrar usuarios ");
         SELF.msgError(SELF.vacio);
       }else{
-        fire.crearUsuario(usuario).then(function() {
+        fire.crearUsuario(usuario,function(error){
+        if (error) {
+          SELF.msgError();
+          }
+        else {
           SELF.msgGuardado();
-        }).catch(function(error) {
-          var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode);
-            SELF.msgError(errorMessage);
-        });
+        }
+      });
+        // .then(function() {
+        //   SELF.msgGuardado();
+        // }).catch(function(error) {
+        //   var errorCode = error.code;
+        //     var errorMessage = error.message;
+        //     console.log(errorCode);
+        //     SELF.msgError(errorMessage);
+        // });
       }
     
     },
@@ -196,8 +215,16 @@ export default {
     });
     },
     metAppAgregarReporte:function(reporte) {
-      reportesRef.push(reporte);
-      this.msgGuardado();
+      const SELF = this;
+      fire.agregarReporte(reporte,function(error){
+        if (error) {
+          SELF.msgError();
+          }
+        else {
+          SELF.msgGuardado();
+        }
+      });
+      
     },
     msgGuardado(){
       toastr.success('Guardado exitosamente!!');

@@ -110,9 +110,10 @@ export default {
     return {
       campoCompleto:false,
         reportes:{
-        nombre:'',
-        celular:'',
-        telefono:'',
+        usuario:'',
+        nombreCliente:'',
+        celularCliente:'',
+        telefonoCliente:'',
         chip:'',
         marca:'',
         modelo:'',

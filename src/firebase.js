@@ -1,4 +1,4 @@
-import { firestore } from "firebase";
+// // // import { firestore } from "firebase";
 import firebase from 'firebase';
 let config = {
     apiKey: "AIzaSyA_ifjdVJn6nYYJdl7jXgAmQ5DNz4ImJ14",
@@ -13,11 +13,15 @@ let config = {
 firebase.initializeApp(config);
 
 var auth = firebase.auth();
-var db = firebase.firestore();
+// var db = firebase.firestore();
+var admin = require("firebase");
+var db = admin.database();
+var reportesRef = db.ref("reportes");
+var usuariosRef = db.ref("usuarios");
+// // var reportesRefe = firebase.initializeApp(config).ref('reportes');
 
 export default new Vue({
     data: {
-        carro: "Cadillac 59",
         varFire: 'Hola desde Fire'
     },
     methods: {
@@ -43,8 +47,40 @@ export default new Vue({
 
             })
         },
-        crearUsuario(usuario) {
-            return auth.createUserWithEmailAndPassword(usuario.email, usuario.contrasena);
+        agregarReporte(reporte, callback) {
+            reportesRef.push(reporte, function(error) {
+                callback(error);
+            });
+        },
+        crearUsuario(usuario, callback) {
+            usuariosRef.push(usuario, function(error) {
+                callback(error);
+            });
+        },
+        mostrarUsuarios: function() {
+            alert("Ya pidio usuarios");
+            new Promise((resolver, rechazar) => {
+                console.log('Inicial');
+
+                resolver();
+            })
+            .then(() => {
+                throw new Error('Algo falló');
+                    
+                console.log('Haz esto');
+            })
+            // usuariosRef.on("value", function(snapshot) {
+            //     var objeto = snapshot.val();
+            //     var usuarios = [];
+            //     for (var propiedad in objeto) {
+            //         usuarios.unshift({
+            //             '.key': propiedad,
+            //             nombre: objeto[propiedad].nombre,
+            //             contrasena: objeto[propiedad].contrasena,
+
+            //         });
+            //     }
+            // })
         },
         iniciarSesion(usuario) {
             // console.log(`FIREBASE.js ${usuario.email} con ${usuario.contrasena} `);

@@ -9,7 +9,8 @@
     h1.txtTitulo Usuarios
     hr.txtTitulo
     br
-    form.bd-content(style ="width:100%;" @submit.prevent="metSubmit")
+    a.button.is-rounded.is-info(@click="mostrarUsuarios") Mostrar todos
+    form.bd-content(style ="width:100%;" @submit.prevent="metSubmit" v-show="registrar")
       br
       br
       h2.txtSubTitulo Registro de usuarios 
@@ -17,8 +18,8 @@
       .marco.marco2
         .field
           .control
-            label.label Correo Electronico :
-              input.input(v-model="usuarios.email" name="email" type="email" placeholder="" )
+            label.label Usuario :
+              input.input(v-model="usuarios.usuario" name="text" type="text" placeholder="" )
         .columns
           .column.is-half
             .field
@@ -41,7 +42,18 @@
             //-  @click="metSubmit"
           span Guardar 
     br                
-    br                
+    br
+    br
+    br
+    table.table.marco2
+      thead
+        tr
+          th Usuario
+          th us.nombre
+      tbody
+        tr(v-for="us in usuariosReg")
+          th {{us.nombre}}
+          th                 
     br                
     img.imgFooter(src="../assets/celular.png")
     footer.footer
@@ -57,14 +69,16 @@
 
 export default {
   name: 'registroUsuario',
+  props:['usuariosReg'],
   data () {
     return {
       mensaje: 'Que pasa mi amigo',
       campoIgual:false,
+      registrar:false,
       campoCompleto:false,
       confContrasena:'',
       usuarios:{
-        email: '',
+        usuario: '',
         contrasena: '',
       }
     }
@@ -84,6 +98,10 @@ export default {
         this.campoIgual=false;
         this.$emit('agregando',this.usuarios);
       }
+    },
+    mostrarUsuarios(){
+        this.$emit('mostrarUsuarios');
+
     }
 
         
