@@ -1,15 +1,11 @@
-<!--
-    img(src="./assets/logo.png")
-    h1 {{mensaje}}
--->
-
 <template lang="pug">
   #registroUsuario
     .fondoTitulo
     h1.txtTitulo Usuarios
     hr.txtTitulo
     br
-    a.button.is-rounded.is-info(@click="mostrarUsuarios") Mostrar todos
+    a.button.is-rounded.is-info(v-show="bolMostrar"  @click="mostrarUsuarios") Mostrar todos
+    a.button.is-rounded.is-info(v-show="bolRegistrar" @click="mostrarUsuarios") Registrar Usuario
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit" v-show="registrar")
       br
       br
@@ -39,26 +35,64 @@
         button.button.is-success.btnCien.btnAceptar(type='submit' name='submit' value='guardar' )  
           span.icon.is-small
             i.fas.fa-check
-            //-  @click="metSubmit"
           span Guardar 
     br                
     br
     br
     br
-    table.table.marco2
+    br
+    br
+
+    table.table.is-hoverable.marco2(v-show="!registrar")
       thead
         tr
           th Usuario
-          th us.nombre
+          th Contraseña
+          th Opciones
       tbody
         tr(v-for="us in usuariosReg")
-          th {{us.nombre}}
-          th                 
+          th {{us.usuario}}
+          th {{us.contrasena}}
+          th.tablaOpciones 
+            //- button#btnLista.button.is-danger(@click="seleccionarUs(us.key)") Borrar                
+            //- button#btnLista.button.is-info(@click="seleccionarUs(us.key)") Editar 
+            p.buttons
+              a.button.is-info(data-target="modalEditar" @click="abrirModal(us)")
+                span.icon.is-small
+                  i.far.fa-edit
+              a.button.is-danger(@click="borrarUsuario(us)")
+                span.icon.is-small
+                  i.fas.fa-trash-alt
+                
+    br
+    br                
+    br
+    br
     br                
     img.imgFooter(src="../assets/celular.png")
     footer.footer
       .content.has-text-centered
         p
+    #modalEditar.modal.is-close
+      .modal-background
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title Editar Usuario
+          button.delete(aria-label='close' @click="cerrarModal")
+        section.modal-card-body
+          .content
+            .field
+              .control
+                input.input.is-info(placeholder="usuario" v-model="usuarioEdit.nuevoUsuario")
+            .field
+              .control
+                input.input.is-info(placeholder="contraseña" v-model="usuarioEdit.nuevaContrasena")
+            h3 Nota
+            blockquote
+              | Recuerda notificarle al usuario que su perfil a sido editado.
+        footer.modal-card-foot
+          button.button.is-success(@click="actualizarUsuario") Guardar
+          button.button(@click="cerrarModal") Cancelar
 
     
 </template>
@@ -74,9 +108,16 @@ export default {
     return {
       mensaje: 'Que pasa mi amigo',
       campoIgual:false,
-      registrar:false,
+      registrar:true,
+      bolMostrar:true,
+      bolRegistrar:false,
       campoCompleto:false,
       confContrasena:'',
+      usuarioEdit:{
+        actKey:'',
+        nuevoUsuario: '',
+        nuevaContrasena: '',
+      },
       usuarios:{
         usuario: '',
         contrasena: '',
@@ -99,10 +140,56 @@ export default {
         this.$emit('agregando',this.usuarios);
       }
     },
-    mostrarUsuarios(){
-        this.$emit('mostrarUsuarios');
+    seleccionarUs(us){
+      console.log(us);
+      
+    },
+    cerrarModal(){
+      console.log("Nada por?");
+      var modal= document.getElementById("modalEditar");
+      modal.classList.remove('is-active');
+      modal.classList.add('is-close');
+    },
+    borrarUsuario(us){
+      
+      this.$emit('borrarUsuarios',us.key);
+      this.$emit('mostrarUsuarios');
 
-    }
+    },
+    actualizarUsuario(){
+      var usuarioEditado=this.usuarioEdit;
+      console.log(`Quieres actualizar a ${usuarioEditado.usuario}`);  
+      console.log(`Key: ${usuarioEditado.key}`);  
+      this.$emit('actualizarUsuarios',this.usuarioEdit);
+      this.$emit('mostrarUsuarios');
+      this.cerrarModal();
+
+    },
+    abrirModal(us){
+      
+      this.usuarioEdit.actKey=us.key;
+      var modal= document.getElementById("modalEditar");
+      // if (modal.classList.contains('modal')) {
+      //   alert("Aqui estoy");
+      // }else{
+      //   alert("nel");
+      // }
+      modal.classList.remove('is-close');
+      modal.classList.add('is-active');
+    },
+    mostrarUsuarios(){
+      if (this.bolMostrar) {
+        this.bolRegistrar=true;
+      this.bolMostrar=false;
+      this.registrar=false;
+      }else{
+        this.bolRegistrar=false;
+      this.bolMostrar=true;
+      this.registrar=true;
+      }
+        this.$emit('mostrarUsuarios');
+    },
+    
 
         
   },
@@ -118,24 +205,27 @@ html{
   background: $grey-lighter;
 }
 
-// .guardarUsuario{
-//   width: 100%;
-// }
+
 
 #registroUsuario
 {
-    // text-align: center;
-    // // display: flex;
+  
     justify-content: center;
     align-items: center; 
     background-image: url("../assets/fondo.png");
     background-size: cover;
 
 }
-
 .imgFooter{
   width: 85px;
   
+}
+
+.table thead th {
+    border-width: 0 0 2px;
+    font-size: 1.5rem;
+    color: #363636;
+    
 }
 
 </style>

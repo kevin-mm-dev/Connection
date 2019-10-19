@@ -27,7 +27,7 @@
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
-    v-on:mostrarUsuarios="traerUsuarios")
+    v-on:mostrarUsuarios="metAppMostrarUsuarios" v-on:actualizarUsuarios="metAppActualizarUsuarios" v-on:borrarUsuarios="metAppBorrarUsuarios")
 
     //- .columns
     //- .column.is-half A la mera mitad
@@ -92,9 +92,7 @@ export default {
           '.key':propiedad,
           nombre:objeto[propiedad].nombre,
           contrasena:objeto[propiedad].contrasena,
-
       }); 
-
       }
       }, 
       function (errorObject) {
@@ -102,24 +100,13 @@ export default {
       });
     },
     fnParametro:function(indice){
-      console.log("Hola "+indice );
-    },
-    traerUsuarios(){
-      // alert("Quieres ususarios");
-      // this.usuarios.push(
+      // console.log("Hola fnParametro 3"+indice );
+      alert("Resolviendo... 2")
+      this.bolLogin=2;
+      caroorongo="hola";
 
-      //   {nombre:'Risas', edad:25},
-      //   {nombre:'Tenari', edad:26},
-      // )
-      const SELF =this;
-      fire.mostrarUsuarios().then(function(){
-            console.log("mostrando usuarios");        
-      });
-      // // fire.mostrarUsuarios(function(todosUsuarios){
-      // //   todosUsuarios=SELF.usuarios;
-      // // });
-      
     },
+    
     cambiarEtiqueta(modulo){
       switch(modulo)
       {
@@ -195,6 +182,58 @@ export default {
         // });
       }
     
+    },metAppActualizarUsuarios:function(usuario){
+      const SELF=this;
+      // console.log(`Hola ${usuario.nombre}`);
+      
+      if (usuarioActivo==undefined) {
+        console.log("Los siento joven, no puede registrar usuarios ");
+        SELF.msgError(SELF.vacio);
+      }else{
+        fire.actualizarUsuario(usuario,function(error){
+        if (error) {
+          SELF.msgError();
+          }
+        else {
+          SELF.msgGuardado();
+        }
+      });
+      }
+    },
+    metAppBorrarUsuarios(keyUsuario){
+      const SELF =this;
+       if (usuarioActivo==undefined) {
+        console.log("Los siento joven, no puede registrar usuarios ");
+        SELF.msgError(SELF.vacio);
+      }else{
+        fire.borrarUsuario(keyUsuario,function(error){
+        if (error) {
+          SELF.msgError();
+          }
+        else {
+          SELF.msgGuardado();
+        }
+      });
+      }
+    },
+    metAppMostrarUsuarios(){
+      const SELF =this;
+      fire.mostrarUsuarios(this.usuarios,function(params) {
+        SELF.usuarios=params;
+      })
+      // .then(()=>{
+      //   SELF.msgError(SELF.msgGuardado);
+      // })
+      // .catch(()=>{
+      //   SELF.msgError(SELF.vacio);
+      //   });
+      // .then(function(){
+      //       console.log("mostrando usuarios");        
+      // });
+      // // fire.mostrarUsuarios(function(todosUsuarios){
+      // //   todosUsuarios=SELF.usuarios;
+      // // });
+      
     },
     metAppIniciarSesion:function (usuario) {
       const SELF= this;

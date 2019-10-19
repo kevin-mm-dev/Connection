@@ -39,7 +39,9 @@ export default {
   },
   methods:{
     enCambio(subModulo){
+      // location.reload();
       this.$emit('cambiando',subModulo);
+
     },
     quitarSombras(ev){
       var btnInicio = document.getElementById("btnInicio");
@@ -72,12 +74,7 @@ export default {
 
 <style lang="scss">
   @import '../scss/main.scss';
-//  #app{
-//   background: url("fondo.jpeg");
-
-//  }
-
-
+  
 
 .txtReportes{
   background: peru;

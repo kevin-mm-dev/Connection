@@ -57,30 +57,51 @@ export default new Vue({
                 callback(error);
             });
         },
-        mostrarUsuarios: function() {
-            alert("Ya pidio usuarios");
-            new Promise((resolver, rechazar) => {
-                console.log('Inicial');
+        actualizarUsuario(usuarioActualizado, callback) {
+            console.log("Quieres ediar a ");
+            // console.log(usuarioActualizado.key);
+            // console.log(usuarioActualizado.usuario);
+            // console.log(usuarioActualizado.contrasena);
 
-                resolver();
-            })
-            .then(() => {
-                throw new Error('Algo falló');
-                    
-                console.log('Haz esto');
-            })
-            // usuariosRef.on("value", function(snapshot) {
-            //     var objeto = snapshot.val();
-            //     var usuarios = [];
-            //     for (var propiedad in objeto) {
-            //         usuarios.unshift({
-            //             '.key': propiedad,
-            //             nombre: objeto[propiedad].nombre,
-            //             contrasena: objeto[propiedad].contrasena,
+            usuariosRef.child(usuarioActualizado.actKey).update({
+                usuario: usuarioActualizado.nuevoUsuario,
+                contrasena: usuarioActualizado.nuevaContrasena
+            }, function(error) {
+                callback(error);
+            });
+        },
+        borrarUsuario(keyUsuario, callback) {
+            console.log("Quieres borrar " + keyUsuario);
 
-            //         });
-            //     }
-            // })
+            db.ref('usuarios/' + keyUsuario).remove(callback());
+        },
+        mostrarUsuarios(usuarios, callback) {
+            // alert("Ya pidio usuarios 1");
+
+            // return new Promise((resolver, rechazar) => {
+
+            //         // alert("Entro 2");
+
+            //         resolver();
+            //     })
+            // .then(() => {
+            //     console.log('Haz esto 4');
+            // }).catch(() => {
+            //     console.log('Algo fallo 4');
+
+            // });
+            var usuarios = [];
+            usuariosRef.on("value", function(snapshot) {
+                var objeto = snapshot.val();
+                for (var propiedad in objeto) {
+                    usuarios.unshift({
+                        'key': propiedad,
+                        usuario: objeto[propiedad].usuario,
+                        contrasena: objeto[propiedad].contrasena,
+                    });
+                }
+                callback(usuarios);
+            });
         },
         iniciarSesion(usuario) {
             // console.log(`FIREBASE.js ${usuario.email} con ${usuario.contrasena} `);

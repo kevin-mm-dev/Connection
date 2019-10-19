@@ -13,16 +13,6 @@
             input.input.is-medium(v-model="usuarios.contrasena" type='password' placeholder='Contraseña')
             span.icon.is-left
               i.fas.fa-lock
-        //- .field
-        //-   .control.has-icons-left.has-icons-right
-        //-     label.label Email :
-        //-       input.input(v-model="usuarios.email" name="text" type="text" placeholder="" )
-        //-       p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-        //- .field
-        //-   .control
-        //-     label.label Contraseña :
-        //-       input.input(v-model="usuarios.contrasena" name="contrasena" type="password" placeholder="" )
-        //-       p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
       br
       button.button.is-success.btnIngresar(type='submit' name='submit' value='guardar' style="boxShadow:0px 1px 5px black;")
         span.icon.is-medium
@@ -98,7 +88,7 @@ html{
 .marcoLogin{
   height: 30%;
   margin: auto;
-    margin-top: 8rem;
+    // margin-top: 4rem;
     padding: 25px;
     width: 35vw;
 }
