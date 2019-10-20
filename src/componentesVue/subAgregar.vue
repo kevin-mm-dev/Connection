@@ -18,7 +18,7 @@
               .field
                 .control.control
                   label.label Celular :
-                    input.input(v-model="reportes.celular" name="cel" type="tel" placeholder="" )
+                    input.input(v-model="reportes.celularClienteCliente" name="cel" type="tel" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
             .column.is-half
               .field
@@ -29,7 +29,7 @@
           .control
             label.label Nombre :
               .control
-                input.input(v-model="reportes.nombre" name="name" type="text" placeholder="" )
+                input.input(v-model="reportes.nombreCliente" name="name" type="text" placeholder="" )
       br
       br
       h2.txtSubTitulo Equipo 
@@ -135,7 +135,25 @@ export default {
     metSubmit() {
       alert('enviando...!')
       this.$emit('agregando',this.reportes);
+      this.limpiarReporte();
+    },
+    limpiarReporte(){
+      this.reportes={
+        usuario:'',
+        nombreCliente:'',
+        celularCliente:'',
+        telefonoCliente:'',
+        chip:'',
+        marca:'',
+        modelo:'',
+        fallas:'',
+        cond:'',
+        acces:'',
+        campoCompleto:false
+        }
     }
+  
+
   },
   components:{},
 

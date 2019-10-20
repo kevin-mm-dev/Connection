@@ -4,13 +4,13 @@
       .marcoLogin
         .field
           .control.has-icons-left
-            input.input.is-medium(v-model="usuarios.email" type='email' placeholder='Email')
+            input.input.is-medium(v-model="usuario.usuario" type='text' placeholder='Usuario')
             span.icon.is-left
-              i.fas.fa-envelope
+              i.fas.fa-user-tie
               
         .field
           .control.has-icons-left
-            input.input.is-medium(v-model="usuarios.contrasena" type='password' placeholder='Contraseña')
+            input.input.is-medium(v-model="usuario.contrasena" type='password' placeholder='Contraseña')
             span.icon.is-left
               i.fas.fa-lock
       br
@@ -39,8 +39,8 @@ export default {
       campoIgual:false,
       campoCompleto:false,
       confContrasena:'',
-      usuarios:{
-        email: '',
+      usuario:{
+        usuario: '',
         contrasena: '',
       }
     }
@@ -52,7 +52,7 @@ export default {
     metSubmit() {
         console.log("Todo bien");
         this.campoIgual=false;
-        this.$emit('iniciandoSesion',this.usuarios);
+        this.$emit('iniciandoSesion',this.usuario);
       // }
     }
   }
@@ -65,11 +65,9 @@ html{
   background: $grey-lighter;
 }
 .btnIngresar{
-
     display: flex;
-    font-size: 1.5rem;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     align-content: space-around;
     width: 31vw;
     margin: auto;

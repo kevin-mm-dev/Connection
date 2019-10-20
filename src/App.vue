@@ -71,6 +71,7 @@ export default {
       usuarios:[{nombre:'kevin', edad:20}],
       mensaje: 'Que pasa mi amigo',
       vacio:"",
+      usuarioKey:'',
       bolBarraAdmin:true,
       bolLogin:true,
       bolForm:false,
@@ -104,9 +105,7 @@ export default {
       alert("Resolviendo... 2")
       this.bolLogin=2;
       caroorongo="hola";
-
     },
-    
     cambiarEtiqueta(modulo){
       switch(modulo)
       {
@@ -161,7 +160,7 @@ export default {
     metAppAgregarUsuario:function(usuario){
       const SELF=this;
       if (usuarioActivo==undefined) {
-        console.log("Los siento joven, no puede registrar usuarios ");
+        console.log("Los siento/a, no puede registrar usuarios ");
         SELF.msgError(SELF.vacio);
       }else{
         fire.crearUsuario(usuario,function(error){
@@ -172,22 +171,13 @@ export default {
           SELF.msgGuardado();
         }
       });
-        // .then(function() {
-        //   SELF.msgGuardado();
-        // }).catch(function(error) {
-        //   var errorCode = error.code;
-        //     var errorMessage = error.message;
-        //     console.log(errorCode);
-        //     SELF.msgError(errorMessage);
-        // });
       }
     
     },metAppActualizarUsuarios:function(usuario){
       const SELF=this;
-      // console.log(`Hola ${usuario.nombre}`);
       
       if (usuarioActivo==undefined) {
-        console.log("Los siento joven, no puede registrar usuarios ");
+        console.log("Los siento joven/a, no puede registrar usuarios ");
         SELF.msgError(SELF.vacio);
       }else{
         fire.actualizarUsuario(usuario,function(error){
@@ -203,7 +193,7 @@ export default {
     metAppBorrarUsuarios(keyUsuario){
       const SELF =this;
        if (usuarioActivo==undefined) {
-        console.log("Los siento joven, no puede registrar usuarios ");
+        console.log("Los siento joven/a, no puede borrar usuarios ");
         SELF.msgError(SELF.vacio);
       }else{
         fire.borrarUsuario(keyUsuario,function(error){
@@ -220,32 +210,37 @@ export default {
       const SELF =this;
       fire.mostrarUsuarios(this.usuarios,function(params) {
         SELF.usuarios=params;
-      })
-      // .then(()=>{
-      //   SELF.msgError(SELF.msgGuardado);
-      // })
-      // .catch(()=>{
-      //   SELF.msgError(SELF.vacio);
-      //   });
-      // .then(function(){
-      //       console.log("mostrando usuarios");        
-      // });
-      // // fire.mostrarUsuarios(function(todosUsuarios){
-      // //   todosUsuarios=SELF.usuarios;
-      // // });
-      
+      });
     },
+    // validarUsuario:function (usu) {
+    //   if (usu.usuario==='' && usu.contrasena==='' ) {
+    //     this.msgError("El usuario no debe ser campo vacío");
+    //   }else{
+    //     if(us.){
+
+    //     }
+    //   }
+    //   return
+    // },
+
     metAppIniciarSesion:function (usuario) {
       const SELF= this;
-      fire.iniciarSesion(usuario)
+      fire.iniciarSesionAuth(usuario,function(usuarioKeyObtenido) {
+        SELF.usuarioKey=usuarioKeyObtenido;
+      })
       .then(function(){
-        fire.status(function(data){
-          usuarioActivo=data;
-        });
-        SELF.bolForm=true;
-        SELF.bolBarraAdmin=true;
-        SELF.bolLogin=false;
-
+        if(SELF.usuarioKey==='')
+        {
+            SELF.msgError("El usuario no existe");
+            SELF.cerrarSesion();
+        }else{
+              fire.status(function(data){
+                usuarioActivo=data;
+              });
+            SELF.bolForm=true;
+            SELF.bolBarraAdmin=true;
+            SELF.bolLogin=false;
+        }
       })
       .catch(function(error) {
       var errorCode = error.code;
@@ -255,6 +250,7 @@ export default {
     },
     metAppAgregarReporte:function(reporte) {
       const SELF = this;
+      reporte.usuario=this.usuarioKey;
       fire.agregarReporte(reporte,function(error){
         if (error) {
           SELF.msgError();
@@ -263,7 +259,6 @@ export default {
           SELF.msgGuardado();
         }
       });
-      
     },
     msgGuardado(){
       toastr.success('Guardado exitosamente!!');

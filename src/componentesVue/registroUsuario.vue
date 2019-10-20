@@ -16,19 +16,20 @@
           .control
             label.label Usuario :
               input.input(v-model="usuarios.usuario" name="text" type="text" placeholder="" )
+              p.help.is-danger(v-if="campoIncompletoUs") Este campo es obligatorio
         .columns
           .column.is-half
             .field
               .control
                 label.label Contraseña :
                   input.input(v-model="usuarios.contrasena" name="contrasena" type="password" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                  p.help.is-danger(v-if="campoIncompletoCont1") Este campo es obligatorio
           .column
             .field
               .control
                 label.label Confirmar Contraseña :
                   input.input(v-model="confContrasena" name="contrasena2" type="password" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                  p.help.is-danger(v-if="campoIncompletoCont2") Este campo es obligatorio
                   p.help.is-danger(v-if="campoIgual") Este campo no concuerda con el anterior
       br
       .btnAceptar
@@ -111,7 +112,9 @@ export default {
       registrar:true,
       bolMostrar:true,
       bolRegistrar:false,
-      campoCompleto:false,
+      campoIncompletoUs:false,
+      campoIncompletoCont1:false,
+      campoIncompletoCont2:false,
       confContrasena:'',
       usuarioEdit:{
         actKey:'',
@@ -130,31 +133,51 @@ export default {
       },
     metSubmit() {
       // alert('enviando...!')
-      if (this.confContrasena!=this.usuarios.contrasena) {
-        console.log("No es igual");
-        this.campoIgual=true;
-      }else
-      {
-        console.log("Todo bien");
-        this.campoIgual=false;
-        this.$emit('agregando',this.usuarios);
+      
+        if(this.camposVacios(this.usuarios.usuario,this.usuarios.contrasena,this.confContrasena))
+        {
+          if (this.confContrasena!=this.usuarios.contrasena) {
+           this.campoIgual=true;
+           }
+          else{
+          console.log("Todo bien");
+          this.campoIgual=false;
+          this.$emit('agregando',this.usuarios);
+        }
       }
     },
-    seleccionarUs(us){
-      console.log(us);
-      
-    },
+    
     cerrarModal(){
       console.log("Nada por?");
       var modal= document.getElementById("modalEditar");
       modal.classList.remove('is-active');
       modal.classList.add('is-close');
     },
+    camposVacios(us,cont1,cont2){
+      if(us==='')
+      {
+        this.campoIncompletoUs=true;
+      }else{
+        this.campoIncompletoUs=false;
+        if(cont1==='')
+          {
+            this.campoIncompletoCont1=true;
+          }else{
+            this.campoIncompletoCont1=false;
+            if(cont2==='')
+              { 
+                this.campoIncompletoCont2=true;
+                return false;
+                }else{
+                this.campoIncompletoCont2=false;
+                return true;
+              }
+            }
+          }
+    },
     borrarUsuario(us){
-      
       this.$emit('borrarUsuarios',us.key);
       this.$emit('mostrarUsuarios');
-
     },
     actualizarUsuario(){
       var usuarioEditado=this.usuarioEdit;
@@ -163,7 +186,11 @@ export default {
       this.$emit('actualizarUsuarios',this.usuarioEdit);
       this.$emit('mostrarUsuarios');
       this.cerrarModal();
-
+      this.usuarioEdit={
+        actKey:'',
+        nuevoUsuario: '',
+        nuevaContrasena: '',
+      }
     },
     abrirModal(us){
       
@@ -188,13 +215,9 @@ export default {
       this.registrar=true;
       }
         this.$emit('mostrarUsuarios');
-    },
-    
-
-        
+    }
   },
   components:{
-    
   }
 }
 </script>

@@ -103,10 +103,22 @@ export default new Vue({
                 callback(usuarios);
             });
         },
-        iniciarSesion(usuario) {
-            // console.log(`FIREBASE.js ${usuario.email} con ${usuario.contrasena} `);
+        iniciarSesionAuth(usuario, callback) {
 
-            return auth.signInWithEmailAndPassword(usuario.email, usuario.contrasena);
+            return auth.signInWithEmailAndPassword('q@gmail.com', '123123').then(function() {
+                var usuarios = [];
+                var usuarioKey = '';
+                usuariosRef.on("value", function(snapshot) {
+                    var objeto = snapshot.val();
+                    for (var propiedad in objeto) {
+                        if (objeto[propiedad].usuario === usuario.usuario && objeto[propiedad].contrasena === usuario.contrasena) {
+                            usuarioKey = propiedad
+                            callback(usuarioKey);
+                        }
+                    }
+                });
+            });
+
         },
         cerrarSesion() {
             return auth.signOut();
