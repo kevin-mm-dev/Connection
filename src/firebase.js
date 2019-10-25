@@ -104,23 +104,45 @@ export default new Vue({
                 callback(usuarios);
             });
         },
-        iniciarSesionAuth(usuario, callback) {
+        iniciarSesionAuth: function(usuario, callback, usuarioNoExiste) {
 
-            return auth.signInWithEmailAndPassword('q@gmail.com', '123123').then(function() {
-                var usuarios = [];
-                var usuarioKey = '';
-                usuariosRef.on("value", function(snapshot) {
-                    var objeto = snapshot.val();
-                    for (var propiedad in objeto) {
-                        if (objeto[propiedad].usuario === usuario.usuario && objeto[propiedad].contrasena === usuario.contrasena) {
-                            usuarioKey = propiedad
-                            callback(usuarioKey);
+            return auth.signInWithEmailAndPassword('q@gmail.com', '123123').then(
+                function() {
+                    var usuarioInicio = [];
+                    var usuarioKey = '';
+                    // alert("Vamos a leer datos");
+
+                    usuariosRef.on("value", function(snapshot) {
+                        var objeto = snapshot.val();
+                        var tamañoArreglo = 0;
+                        for (var propiedad in objeto) {
+                            tamañoArreglo++;
+                            if (objeto[propiedad].usuario === usuario.usuario && objeto[propiedad].contrasena === usuario.contrasena) {
+                                usuarioInicio.Key = propiedad;
+                                usuarioKey = propiedad;
+                                usuarioInicio.tipo = objeto[propiedad].tipo;
+
+                            }
+                            // debugger;
+                            // if (objeto.length == tamañoArreglo) {
+                            //     callback(usuarioKey);
+                            // }
                         }
-                    }
+                        // debugger;
+                        if (usuarioKey === '') {
+                            // alert("Salio for pero key esta vacio");
+                            usuarioNoExiste();
+                        } else {
+                            // alert(`Te mandare ${usuarioInicio.Key} ${usuarioInicio.tipo}`);
+                            callback(usuarioInicio.Key, usuarioInicio.tipo);
+                            usuarioInicio.Key = "";
+                            usuarioInicio.tipo = "";
+                            // alert("Salio for pero key esta Bien");
+                        }
+                    });
                 });
-            });
-
         },
+        // promesa: new Promise(params),
         cerrarSesion() {
             return auth.signOut();
         }

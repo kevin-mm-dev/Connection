@@ -73,6 +73,7 @@ export default {
       mensaje: 'Que pasa mi amigo',
       vacio:"",
       usuarioKey:'',
+      usuarioTipo:'',
       bolBarraAdmin:true,
       bolLogin:true,
       bolForm:false,
@@ -224,30 +225,42 @@ export default {
     //   return
     // },
 
-    metAppIniciarSesion:function (usuario) {
+    metAppIniciarSesion: function (usuario) {
       const SELF= this;
-      fire.iniciarSesionAuth(usuario,function(usuarioKeyObtenido) {
-        SELF.usuarioKey=usuarioKeyObtenido;
-      })
-      .then(function(){
-        if(SELF.usuarioKey==='')
-        {
-            SELF.msgError("El usuario no existe");
-            SELF.cerrarSesion();
-        }else{
-              fire.status(function(data){
-                usuarioActivo=data;
-              });
-            SELF.bolForm=true;
-            SELF.bolBarraAdmin=true;
-            SELF.bolLogin=false;
+       fire.iniciarSesionAuth(usuario,
+        function saleBien(key,tipo) {
+          SELF.usuarioKey=key;
+          SELF.usuarioTipo=tipo;
+          // SELF.msgGuardado(`Bienvenido ${SELF.usuarioKey} ${SELF.usuarioTipo}`);
+          SELF.bolLogin=false;
+          SELF.bolForm=true;
+          SELF.bolBarraAdmin=true;
+        },
+        function noExiste() {
+          SELF.msgError('El usuario no esta registrado');
+          SELF.cerrarSesion();
         }
-      })
-      .catch(function(error) {
-      var errorCode = error.code;
-      var errorMessage = error.message;
-      SELF.msgError(errorMessage);
-    });
+        )
+        .catch(function(error) {
+          SELF.cerrarSesion();
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        SELF.msgError(errorMessage);
+      }); 
+      // else{
+    //           fire.status(function(data){
+    //             usuarioActivo=data;
+    //           });
+    //         SELF.bolForm=true;
+    //         SELF.bolBarraAdmin=true;
+    //         SELF.bolLogin=false;
+    //     }
+    //   })
+    //   .catch(function(error) {
+    //   var errorCode = error.code;
+    //   var errorMessage = error.message;
+    //   SELF.msgError(errorMessage);
+    // });
     },
     metAppAgregarReporte:function(reporte) {
       const SELF = this;
@@ -261,8 +274,8 @@ export default {
         }
       });
     },
-    msgGuardado(){
-      toastr.success('Guardado exitosamente!!');
+    msgGuardado(msg){
+      toastr.success('Guardado exitosamente!! '+msg);
     },
     msgError(msg)
     {

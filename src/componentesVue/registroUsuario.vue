@@ -53,9 +53,9 @@
           span.icon.is-small
             i.fas.fa-check
           span Guardar 
-    br                
-    br                
-    br                
+    //- br                
+    //- br                
+    //- br                
     table.table.is-hoverable.marco2(v-show="!registrar")
       thead
         tr
