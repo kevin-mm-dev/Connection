@@ -98,6 +98,7 @@ export default new Vue({
                         'key': propiedad,
                         usuario: objeto[propiedad].usuario,
                         contrasena: objeto[propiedad].contrasena,
+                        tipo: objeto[propiedad].tipo,
                     });
                 }
                 callback(usuarios);

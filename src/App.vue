@@ -40,6 +40,7 @@
 //////////////------ COMPONENTES
 import barraAdmin from './componentesVue/barraAdmin.vue'
 import subAgregar from './componentesVue/subAgregar.vue'
+import subRepar from './componentesVue/subRepar.vue'
 import registroUsuario from './componentesVue/registroUsuario.vue'
 import login from './componentesVue/login.vue'
 
@@ -271,6 +272,7 @@ export default {
   },
   components:{
     etqFormulario:subAgregar,
+    etqReparacion:subRepar,
     etqRegistroUsuario:registroUsuario,
     etqLogin:login,
     etqbarraAdmin:barraAdmin,

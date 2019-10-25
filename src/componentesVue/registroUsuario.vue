@@ -4,19 +4,35 @@
     h1.txtTitulo Usuarios
     hr.txtTitulo
     br
-    a.button.is-rounded.is-info(v-show="bolMostrar"  @click="mostrarUsuarios") Mostrar todos
-    a.button.is-rounded.is-info(v-show="bolRegistrar" @click="mostrarUsuarios") Registrar Usuario
+    a.button.is-rounded.btnMostrarUsu(v-show="bolMostrar"  @click="mostrarUsuarios")
+      span.icon.is-small
+        i.fas.fa-arrow-left
+      span
+        b Mostrar todos
+    a.button.is-rounded.btnMostrarUsu(v-show="bolRegistrar" @click="mostrarUsuarios") 
+      span.icon.is-small
+        i.fas.fa-arrow-left
+      span
+        b Registrar Usuario
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit" v-show="registrar")
-      br
-      br
       h2.txtSubTitulo Registro de usuarios 
       br
       .marco.marco2
-        .field
-          .control
-            label.label Usuario :
-              input.input(v-model="usuarios.usuario" name="text" type="text" placeholder="" )
-              p.help.is-danger(v-if="campoIncompletoUs") Este campo es obligatorio
+        .columns
+          .column.is-two-thirds
+            .field
+              .control
+                label.label Usuario :
+                  input.input(v-model="usuarios.usuario" name="text" type="text" placeholder="" )
+                  p.help.is-danger(v-if="campoIncompletoUs") Este campo es obligatorio
+          .column
+            .field
+              .control
+                h3 Tipo:
+                .select
+                  select(v-model="usuarios.tipo")
+                    option Gerente
+                    option Técnico
         .columns
           .column.is-half
             .field
@@ -38,22 +54,20 @@
             i.fas.fa-check
           span Guardar 
     br                
-    br
-    br
-    br
-    br
-    br
-
+    br                
+    br                
     table.table.is-hoverable.marco2(v-show="!registrar")
       thead
         tr
           th Usuario
           th Contraseña
+          th Tipo
           th Opciones
       tbody
         tr(v-for="us in usuariosReg")
           th {{us.usuario}}
           th {{us.contrasena}}
+          th {{us.tipo}}
           th.tablaOpciones 
             //- button#btnLista.button.is-danger(@click="seleccionarUs(us.key)") Borrar                
             //- button#btnLista.button.is-info(@click="seleccionarUs(us.key)") Editar 
@@ -88,6 +102,13 @@
             .field
               .control
                 input.input.is-info(placeholder="contraseña" v-model="usuarioEdit.nuevaContrasena")
+            .field
+              .control
+                h3 Tipo:
+                .select
+                  select(v-model="usuarioEdit.nuevoTipo")
+                    option Gerente
+                    option Técnico
             h3 Nota
             blockquote
               | Recuerda notificarle al usuario que su perfil a sido editado.
@@ -120,10 +141,12 @@ export default {
         actKey:'',
         nuevoUsuario: '',
         nuevaContrasena: '',
+        nuevoTipo: '',
       },
       usuarios:{
         usuario: '',
         contrasena: '',
+        tipo: 'Gerente',
       }
     }
   },
@@ -133,7 +156,7 @@ export default {
       },
     metSubmit() {
       // alert('enviando...!')
-      
+      // alert(`Eres tipo ${this.usuarios.tipo}`);
         if(this.camposVacios(this.usuarios.usuario,this.usuarios.contrasena,this.confContrasena))
         {
           if (this.confContrasena!=this.usuarios.contrasena) {
@@ -143,6 +166,12 @@ export default {
           console.log("Todo bien");
           this.campoIgual=false;
           this.$emit('agregando',this.usuarios);
+          this.confContrasena="";
+          this.usuarios={
+            usuario: '',
+            contrasena: '',
+            tipo: 'Gerente',
+          }
         }
       }
     },
@@ -152,6 +181,12 @@ export default {
       var modal= document.getElementById("modalEditar");
       modal.classList.remove('is-active');
       modal.classList.add('is-close');
+      
+      this.usuarioEdit={
+        actKey:'',
+        nuevoUsuario: '',
+        nuevaContrasena: '',
+      }
     },
     camposVacios(us,cont1,cont2){
       if(us==='')
@@ -195,6 +230,9 @@ export default {
     abrirModal(us){
       
       this.usuarioEdit.actKey=us.key;
+      this.usuarioEdit.nuevoUsuario=us.usuario;
+      this.usuarioEdit.nuevaContrasena=us.contrasena;
+      this.usuarioEdit.nuevoTipo=us.tipo;
       var modal= document.getElementById("modalEditar");
       // if (modal.classList.contains('modal')) {
       //   alert("Aqui estoy");
@@ -227,7 +265,11 @@ export default {
 html{
   background: $grey-lighter;
 }
-
+.btnMostrarUsu{
+  margin-top: 6rem;
+  margin-left: 3rem;
+  background-color: #a7ff8a;
+}
 
 
 #registroUsuario
