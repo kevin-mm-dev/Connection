@@ -20,7 +20,7 @@
                   i.fas.fa-book-open
               span Reportes
         li
-          a.button.is-rounded#btnUsarios(@click="metodUsuarios(),enCambio('usuarios')") 
+          a.button.is-rounded#btnUsarios(v-show="tipoUs=='Técnico'" @click="metodUsuarios(),enCambio('usuarios')") 
             span.icon.is-small
               i.fas.fa-users
             span Usuarios
@@ -32,12 +32,22 @@
 
 export default {
   name: 'barraAdmin',
+  props:['tipoUs'],
+  ready:function () {
+    
+  },
   data () {
     return {
-      
+      // bolTipo:false,
     }
   },
   methods:{
+    verTipo(tipo)
+    {
+      if(tipo=='Técnico'){
+      this.bolTipo=true;
+    }
+    },
     enCambio(subModulo){
       // location.reload();
       this.$emit('cambiando',subModulo);
@@ -60,6 +70,7 @@ export default {
     },
     metodReparaciones(){
       this.quitarSombras("btnReparaciones");
+      // alert(`Tu eres tipo ${this.tipoUs}`);
       },
     metodReportes(){
       this.quitarSombras("btnReportes");

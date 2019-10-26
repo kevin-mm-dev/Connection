@@ -18,13 +18,13 @@
               .field
                 .control.control
                   label.label Celular :
-                    input.input(v-model="reportes.celularClienteCliente" name="cel" type="tel" placeholder="" )
+                    input.input(v-model="reportes.celularCliente" name="cel" type="tel" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
             .column.is-half
               .field
                 .control.control
                   label.label.telefono Telefono de Casa :
-                    input.input(v-model="reportes.telefono" name="tel" type="tel" placeholder="" )
+                    input.input(v-model="reportes.telefonoCliente" name="tel" type="tel" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
           .control
             label.label Nombre :
@@ -120,20 +120,23 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        campoCompleto:false
+        reparado:0,
+        cotizado:0,
+        fecha:''
         }
     }
   },
   methods:{
-    validar(){
-      if (this.campoCompleto) {
-        this.campoCompleto=false
-      }else{
-        this.campoCompleto=true
-      }
-    },
+    // validar(){
+    //   if (this.campoCompleto) {
+    //     this.campoCompleto=false
+    //   }else{
+    //     this.campoCompleto=true
+    //   }
+    // },
     metSubmit() {
-      alert('enviando...!')
+      // alert('enviando...!')
+      this.reportes.fecha=this.fechaHoy();
       this.$emit('agregando',this.reportes);
       this.limpiarReporte();
     },
@@ -149,14 +152,18 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        campoCompleto:false
+        fecha:''
         }
-    }
-  
-
-  },
-  components:{},
-
+    },
+    fechaHoy:function(){
+        var hoy = new Date();
+        var dd = hoy.getDate();
+        var mm = hoy.getMonth()+1;
+        var yyyy = hoy.getFullYear();
+        return dd+'/'+mm+'/'+yyyy;
+    },
+    
+  }
 }
 </script>
 

@@ -2,34 +2,73 @@
 <template lang="pug">
   #subAgregar
     .fondoTitulo
-    h1.txtTitulo Inicio
+    h1.txtTitulo Reparaciones
     hr.txtTitulo
     br
-    form.paginaReporte
+    br
+    br
+    br
+    .buscar
+      .columns
+          .column.is-three-quarters.divBarraBuscar
+            .field
+              .control
+                input.input.is-primary.txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
+          .column
+            .field
+              .control
+                button.button.is-success(@click="mostrar('nombreCliente',clienteBuscar)") BUSCAR
+
+    br
+    br
+    button.button.is-info(@click="mostrar('','')") Mostrar Reparaciones
+    table.table.is-hoverable.marco2
+      thead
+        tr
+          th Cliente
+          th Celular
+          th Fallas
+          th Fecha
+          th Opciones
+      tbody
+        tr(v-for="re in repar")
+          th {{re.nombreCliente}}
+          th {{re.celularCliente}}
+          th {{re.fallas}}
+          th {{re.fecha}}
+          th.tablaOpciones 
+            p.buttons
+              a.button.is-info(@click="editarReporte(re)")
+                span.icon.is-small
+                  i.far.fa-edit
+              a.button.is-danger()
+                span.icon.is-small
+                  i.fas.fa-trash-alt
+    
+    form.paginaReporte(v-if="bolEditar")
+      br
       br
       br
       h2.txtSubTitulo Cliente 
       br
       .marco.marco2
-        //- .bd-content(style ="width:100%;")
-        .field
-          .columns
-            .column.is-half
-              .field
-                .control.control
-                  label.label Celular :
-                    input.input(v-model="reportes.celularClienteCliente" name="cel" type="tel" placeholder="" )
-                    p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-            .column.is-half
-              .field
-                .control.control
-                  label.label.telefono Telefono de Casa :
-                    input.input(v-model="reportes.telefono" name="tel" type="tel" placeholder="" )
-                    p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-          .control
-            label.label Nombre :
-              .control
-                input.input(v-model="reportes.nombreCliente" name="name" type="text" placeholder="" )
+        .columns
+          .column.is-half
+            .field
+              .control.control
+                label.label Celular :
+                  input.input(v-model="reportes.celularCliente" name="cel" type="tel" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+          .column.is-half
+            .field
+              .control.control
+                label.label.telefono Telefono de Casa :
+                  input.input(v-model="reportes.telefonoCliente" name="tel" type="tel" placeholder="" )
+                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+        .control
+          label.label Nombre :
+            .control
+              input.input(v-model="reportes.nombreCliente" name="name" type="text" placeholder="" )
       br
       br
       h2.txtSubTitulo Equipo 
@@ -61,54 +100,35 @@
     
       br
       .btnAceptar
-        a.button.is-success.btnCien.btnAceptar(@click="metSubmit")  
+        a.button.is-success.btnCien.btnAceptar()  
           span.icon.is-small
             i.fas.fa-check
-          span Guardar               
+          span Guardar   
+    br                
+    br                
+    br                
+    br                
+    br                
     br                
     br                
     br
     .pound                
     img.imgFooter(src="../assets/celular.png")
     footer.footer
-      .content.has-text-centered
-        p
-          
-          //- strong Bulma
-          //- |  by 
-          //- a(href='https://jgthms.com') Jeremy Thomas
-          //- | . The source code is licensed
-          //- a(href='http://opensource.org/licenses/mit-license.php') MIT
-          //- | . The website content
-          //- |       is licensed 
-          //- a(href='http://creativecommons.org/licenses/by-nc-sa/4.0/') CC BY NC SA 4.0
-          //- | .
-
-          //- .control
-            button.button(@click="validar" type="submit") valer
-            h1
-
-
-          //- form
-          //-   label(for="celular") Celular:
-          //-   input.datosCliente(name="celular" type="text" placeholder="000-000-00-00" )
-          //-   label(for="name") Nombre:
-          //-   input.lblNombre(name="name" type="password" placeholder="")
-
-            //- .column.is-half
-            //-   h3(v-model="cel") Nombre:
-
-
 </template>
 
 <script>
-// import prueba from '../../'
 export default {
-  name: 'subAgregar',
-  props:[],
+  name: 'subRepar',
+  props:['repar'],
+  
   data (){
     return {
-      campoCompleto:false,
+      clienteBuscar:'',
+      filtro :new Object(),
+      campoCompleto:'',
+      listaReportes:[],
+      bolEditar:true,
         reportes:{
         usuario:'',
         nombreCliente:'',
@@ -120,22 +140,37 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        campoCompleto:false
+        
         }
     }
   },
   methods:{
-    validar(){
-      if (this.campoCompleto) {
-        this.campoCompleto=false
-      }else{
-        this.campoCompleto=true
-      }
+    
+    mostrar(tipo,valor) {
+      // alert('enviando...!')
+      // debugger;
+      this.filtro.tipo=tipo;
+      this.filtro.valor=valor;
+
+      this.$emit('mostrarReparaciones',this.filtro);
+      // setTimeout(heredarReportes(),3000);
+      
+      // this.limpiarReporte();
     },
-    metSubmit() {
-      alert('enviando...!')
-      this.$emit('agregando',this.reportes);
-      this.limpiarReporte();
+    
+    filtrar()
+    {
+      // alert(`hola ${this.clienteBuscar}`);
+      debugger;
+      let reportesFiltrados=[];
+      for(var repo in this.listaReportes)
+      {
+        if(repo.nombreCliente==this.clienteBuscar)
+        {
+          reportesFiltrados.push(repo);
+        }
+      }
+      this.listaReportes=reportesFiltrados;
     },
     limpiarReporte(){
       this.reportes={
@@ -149,13 +184,25 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        campoCompleto:false
+        
         }
-    }
-  
+    },
+    editarReporte(re)
+    {
+      var fec=this.fechaHoy();
+      alert(`Hoy es ${fec}`);
+      this.reportes=re;
+    },
+    fechaHoy:function(){
+        var hoy = new Date();
+        var dd = hoy.getDate();
+        var mm = hoy.getMonth()+1;
+        var yyyy = hoy.getFullYear();
+        
 
-  },
-  components:{},
+        return dd+'/'+mm+'/'+yyyy;
+    }
+  }
 
 }
 </script>
@@ -166,39 +213,42 @@ export default {
 
 //////////////////////////  EXTRAS
 
-.cliente{
+html{
+  background: $grey-lighter;
+}
+.btnMostrarUsu{
+  margin-top: 6rem;
+  margin-left: 3rem;
+  background-color: #a7ff8a;
+}
+
+.divBarraBuscar{
   display: flex;
-  // flex-wrap: 10px;
-  justify-content: space-between;
-  align-content: flex-start; 
-  margin: auto;
-  // margin-right: 1rem;
+  justify-items: right;
 }
-#subAgregar{
-      justify-content: center;
-    align-items: center;
-  background-image: url("../assets/papel.jpg");
-  // background-size: 30%; 
-}
+#registroUsuario
+{
+  
+    justify-content: center;
+    align-items: center; 
+    background-image: url("../assets/fondo.png");
+    background-size: cover;
 
-
-input.nombre{
-width: 25rem;
-}
-// .field{
-//   margin-right: 50px;
-// }
-.lblNombre{
-  width:20rem;
 }
 .imgFooter{
   width: 85px;
   
 }
+.txtBuscar {
+    display: flex;
+    width: 57vw;
+    margin-left: 14.5rem;
+}
 
-
-// rem o px
-// imprimir PDF
-// como obtener el id de un elemento en la tabla
-
+.table thead th {
+    border-width: 0 0 2px;
+    font-size: 1.5rem;
+    color: #363636;
+    
+}
 </style>

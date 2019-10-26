@@ -1,7 +1,7 @@
 <template lang="pug">
   #app
     nav#principal
-        h1 Connection
+        h1(v-model="tituloH") Connection
         button#btncerrarSesion.button(v-if="bolBarraAdmin" @click="cerrarSesion")
 
         //- Cerrar Sesión
@@ -23,9 +23,10 @@
         //- input(v-model='tarea.titulo' v-show='editandoTarea === $index' @blur='editandoTarea = null, editarTarea(tarea)' type='text')
         //- div(v-show='tarea.uid === usuarioActivo.uid')
 
-    etqbarraAdmin(v-if="bolBarraAdmin" v-on:cambiando="cambiarEtiqueta")
+    etqbarraAdmin(v-if="bolBarraAdmin" v-bind:tipoUs="usuarioTipo" v-on:cambiando="cambiarEtiqueta")
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
+    etqReparacion(v-if="bolReparaciones"  v-bind:repar="reportes" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
     v-on:mostrarUsuarios="metAppMostrarUsuarios" v-on:actualizarUsuarios="metAppActualizarUsuarios" v-on:borrarUsuarios="metAppBorrarUsuarios")
 
@@ -69,7 +70,9 @@ export default {
   },
   data () {
     return {
-      usuarios:[{nombre:'kevin', edad:20}],
+      tituloH:'Hola titulo',
+      usuarios:[],
+      reportes:[],
       mensaje: 'Que pasa mi amigo',
       vacio:"",
       usuarioKey:'',
@@ -213,6 +216,22 @@ export default {
       fire.mostrarUsuarios(this.usuarios,function(params) {
         SELF.usuarios=params;
       });
+    },
+    metAppMostrarReparaciones(filtro){
+      const SELF =this;
+      fire.mostrarReparaciones(filtro,function(params) {
+        SELF.reportes=params;
+      });
+    },
+    metAppActualizarReparaciones(){
+      fire.actualizarReparaciones(reporte,function(error){
+        if (error) {
+          SELF.msgError();
+          }
+        else {
+          SELF.msgGuardado();
+        }
+      })
     },
     // validarUsuario:function (usu) {
     //   if (usu.usuario==='' && usu.contrasena==='' ) {

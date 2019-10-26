@@ -104,6 +104,108 @@ export default new Vue({
                 callback(usuarios);
             });
         },
+        mostrarReparaciones(filtro, callback) {
+            var reportes = [];
+
+            reportesRef.on("value", function(snapshot) {
+                var objeto = snapshot.val();
+                for (var propiedad in objeto) {
+                    debugger;
+                    switch (filtro.tipo) {
+                        case 'fecha':
+                            if (filtro.valor == objeto[propiedad].fecha && objeto[propiedad].reparado == 0) {
+                                reportes.unshift({
+                                    'key': propiedad,
+                                    nombreCliente: objeto[propiedad].nombreCliente,
+                                    celularCliente: objeto[propiedad].celularCliente,
+                                    fallas: objeto[propiedad].fallas,
+                                    acces: objeto[propiedad].acces,
+                                    chip: objeto[propiedad].chip,
+                                    cond: objeto[propiedad].cond,
+                                    cotizado: objeto[propiedad].cotizado,
+                                    marca: objeto[propiedad].marca,
+                                    modelo: objeto[propiedad].modelo,
+                                    reparado: objeto[propiedad].reparado,
+                                    telefonoCliente: objeto[propiedad].telefonoCliente,
+                                    usuario: objeto[propiedad].usuario,
+                                    fecha: objeto[propiedad].fecha,
+                                });
+                            }
+                            break;
+                        case 'nombreCliente':
+                            if (filtro.valor == objeto[propiedad].nombreCliente && objeto[propiedad].reparado == 0) {
+                                reportes.unshift({
+                                    'key': propiedad,
+                                    nombreCliente: objeto[propiedad].nombreCliente,
+                                    celularCliente: objeto[propiedad].celularCliente,
+                                    fallas: objeto[propiedad].fallas,
+                                    acces: objeto[propiedad].acces,
+                                    chip: objeto[propiedad].chip,
+                                    cond: objeto[propiedad].cond,
+                                    cotizado: objeto[propiedad].cotizado,
+                                    marca: objeto[propiedad].marca,
+                                    modelo: objeto[propiedad].modelo,
+                                    reparado: objeto[propiedad].reparado,
+                                    telefonoCliente: objeto[propiedad].telefonoCliente,
+                                    usuario: objeto[propiedad].usuario,
+                                    fecha: objeto[propiedad].fecha,
+                                });
+                            }
+                            break;
+                        case 'reparado':
+                            if (filtro.valor == objeto[propiedad].reparado && objeto[propiedad].reparado == 0) {
+                                reportes.unshift({
+                                    'key': propiedad,
+                                    nombreCliente: objeto[propiedad].nombreCliente,
+                                    celularCliente: objeto[propiedad].celularCliente,
+                                    fallas: objeto[propiedad].fallas,
+                                    acces: objeto[propiedad].acces,
+                                    chip: objeto[propiedad].chip,
+                                    cond: objeto[propiedad].cond,
+                                    cotizado: objeto[propiedad].cotizado,
+                                    marca: objeto[propiedad].marca,
+                                    modelo: objeto[propiedad].modelo,
+                                    reparado: objeto[propiedad].reparado,
+                                    telefonoCliente: objeto[propiedad].telefonoCliente,
+                                    usuario: objeto[propiedad].usuario,
+                                    fecha: objeto[propiedad].fecha,
+                                });
+                            }
+
+                            break;
+                        default:
+                            reportes.unshift({
+                                'key': propiedad,
+                                nombreCliente: objeto[propiedad].nombreCliente,
+                                celularCliente: objeto[propiedad].celularCliente,
+                                fallas: objeto[propiedad].fallas,
+                                acces: objeto[propiedad].acces,
+                                chip: objeto[propiedad].chip,
+                                cond: objeto[propiedad].cond,
+                                cotizado: objeto[propiedad].cotizado,
+                                marca: objeto[propiedad].marca,
+                                modelo: objeto[propiedad].modelo,
+                                reparado: objeto[propiedad].reparado,
+                                telefonoCliente: objeto[propiedad].telefonoCliente,
+                                usuario: objeto[propiedad].usuario,
+                                fecha: objeto[propiedad].fecha,
+                            });
+                            break;
+                    }
+                }
+                callback(reportes);
+            });
+        },
+        actualizarReparaciones(reparacionActualizado, callback) {
+
+
+            reportesRef.child(reparacionActualizado.Key).update({
+                nombreCliente: reparacionActualizado.nombreCliente,
+                celularCliente: reparacionActualizado.celularCliente
+            }, function(error) {
+                callback(error);
+            });
+        },
         iniciarSesionAuth: function(usuario, callback, usuarioNoExiste) {
 
             return auth.signInWithEmailAndPassword('q@gmail.com', '123123').then(
