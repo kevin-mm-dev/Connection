@@ -2,7 +2,7 @@
 <template lang="pug">
   #subAgregar
     .fondoTitulo
-    h1.txtTitulo Reparaciones
+    h1.txtTitulo Reparaciones Técnico
     hr.txtTitulo
     br
     br
@@ -119,7 +119,7 @@
 </template>
 
 <script>
-import tablaReportes from './tablaReportes.vue'
+import tablaReportes from './tablaReportesTec.vue'
 
 export default {
   name: 'subRepar',
@@ -162,6 +162,7 @@ export default {
     
     filtrar()
     {
+      // alert(`hola ${this.clienteBuscar}`);
       
       let reportesFiltrados=[];
       for(var repo in this.listaReportes)

@@ -110,7 +110,7 @@ export default new Vue({
             reportesRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
                 for (var propiedad in objeto) {
-                    debugger;
+                    // debugger;
                     switch (filtro.tipo) {
                         case 'fecha':
                             if (filtro.valor == objeto[propiedad].fecha && objeto[propiedad].reparado == 0) {

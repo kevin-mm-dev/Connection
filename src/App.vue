@@ -27,6 +27,8 @@
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqReparacion(v-if="bolReparaciones"  v-bind:repar="reportes" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones")
+    etqReparacionTec(v-if="bolReparacionesTec"  v-on:mostrarReparaciones="metAppMostrarReparaciones")
+    //- etqReparacion(v-if="bolReparaciones")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
     v-on:mostrarUsuarios="metAppMostrarUsuarios" v-on:actualizarUsuarios="metAppActualizarUsuarios" v-on:borrarUsuarios="metAppBorrarUsuarios")
 
@@ -41,6 +43,7 @@
 //////////////------ COMPONENTES
 import barraAdmin from './componentesVue/barraAdmin.vue'
 import subAgregar from './componentesVue/subAgregar.vue'
+import subReparTec from './componentesVue/subReparTec.vue'
 import subRepar from './componentesVue/subRepar.vue'
 import registroUsuario from './componentesVue/registroUsuario.vue'
 import login from './componentesVue/login.vue'
@@ -76,12 +79,13 @@ export default {
       mensaje: 'Que pasa mi amigo',
       vacio:"",
       usuarioKey:'',
-      usuarioTipo:'',
+      usuarioTipo:'Técnico',
       bolBarraAdmin:true,
       bolLogin:true,
       bolForm:false,
       bolRegistrarUsuario:false,
       bolReparaciones:false,
+      bolReparacionesTec:false,
       bolReportes:false,
     }
   },
@@ -121,7 +125,15 @@ export default {
           break;
         case 'reparaciones':
           this.limpiarEtiquetas();
-          this.bolReparaciones=true;
+          // debugger;
+          if(this.usuarioTipo=='Técnico')
+          {
+            this.bolReparacionesTec=true;
+
+          }else{
+            this.bolReparaciones=true;
+
+          }
 
           break;
         case 'reportes':
@@ -144,6 +156,13 @@ export default {
       this.bolReparaciones=false;
       this.bolReportes=false;
     },
+    limpiarComponentes(){
+        this.bolLogin=true;
+        this.bolBarraAdmin=false;
+        this.bolReparaciones=false;
+        this.bolReparacionesTec=false;
+        usuarioActivo=undefined;
+    },
     ingresar(){
       this.bolLogin=true;
       this.bolBarraAdmin=true;
@@ -156,7 +175,7 @@ export default {
         SELF.bolBarraAdmin=false;
         usuarioActivo=undefined;
         console.log("Saliendo...");
-
+        limpiarComponentes();
       }).catch(function(error) {
         console.log("Error en la salida --"+error.message);
       });
@@ -305,6 +324,7 @@ export default {
   components:{
     etqFormulario:subAgregar,
     etqReparacion:subRepar,
+    etqReparacionTec:subReparTec,
     etqRegistroUsuario:registroUsuario,
     etqLogin:login,
     etqbarraAdmin:barraAdmin,

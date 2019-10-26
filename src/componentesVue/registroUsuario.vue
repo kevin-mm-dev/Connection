@@ -56,28 +56,29 @@
     //- br                
     //- br                
     //- br                
-    table.table.is-hoverable.marco2(v-show="!registrar")
-      thead
-        tr
-          th Usuario
-          th Contraseña
-          th Tipo
-          th Opciones
-      tbody
-        tr(v-for="us in usuariosReg")
-          th {{us.usuario}}
-          th {{us.contrasena}}
-          th {{us.tipo}}
-          th.tablaOpciones 
-            //- button#btnLista.button.is-danger(@click="seleccionarUs(us.key)") Borrar                
-            //- button#btnLista.button.is-info(@click="seleccionarUs(us.key)") Editar 
-            p.buttons
-              a.button.is-info(data-target="modalEditar" @click="abrirModal(us)")
-                span.icon.is-small
-                  i.far.fa-edit
-              a.button.is-danger(@click="borrarUsuario(us)")
-                span.icon.is-small
-                  i.fas.fa-trash-alt
+    .divTabla
+      table.table.is-hoverable.marco2(v-show="!registrar")
+        thead
+          tr
+            th Usuario
+            th Contraseña
+            th Tipo
+            th Opciones
+        tbody
+          tr(v-for="us in usuariosReg")
+            th {{us.usuario}}
+            th {{us.contrasena}}
+            th {{us.tipo}}
+            th.tablaOpciones 
+              //- button#btnLista.button.is-danger(@click="seleccionarUs(us.key)") Borrar                
+              //- button#btnLista.button.is-info(@click="seleccionarUs(us.key)") Editar 
+              p.buttons
+                a.button.is-info(data-target="modalEditar" @click="abrirModal(us)")
+                  span.icon.is-small
+                    i.far.fa-edit
+                a.button.is-danger(@click="borrarUsuario(us)")
+                  span.icon.is-small
+                    i.fas.fa-trash-alt
                 
     br
     br                
@@ -285,7 +286,9 @@ html{
   width: 85px;
   
 }
-
+.divTabla{
+  height: 10%;
+}
 .table thead th {
     border-width: 0 0 2px;
     font-size: 1.5rem;
