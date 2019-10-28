@@ -1,4 +1,3 @@
-
 <template lang="pug">
   #subAgregar
     .fondoTitulo
@@ -8,7 +7,8 @@
     br
     br
     br
-    .buscar
+    etqCotizar(v-show="bolCotizar" v-on:cotizar="mandarCotizar" v-on:cerrarCotizar="cerrarCotizar")
+    .buscar(v-show="bolTabla")
       form.columns(@submit.prevent="mostrar('nombreCliente',clienteBuscar)")
         .column.is-three-quarters.divBarraBuscar
           .field
@@ -21,90 +21,74 @@
 
     br
     br
-    button.button.is-info(@click="mostrar('','')") Mostrar Reparaciones
-    etqTabla(v-bind:listaReportes="repar"  v-on:tablaEditar="editarReporte")
-    //- table.table.is-hoverable.marco2
-    //-   thead
-    //-     tr
-    //-       th Cliente
-    //-       th Celular
-    //-       th Fallas
-    //-       th Fecha
-    //-       th Opciones
-    //-   tbody
-    //-     tr(v-for="re in repar")
-    //-       th {{re.nombreCliente}}
-    //-       th {{re.celularCliente}}
-    //-       th {{re.fallas}}
-    //-       th {{re.fecha}}
-    //-       th.tablaOpciones 
-    //-         p.buttons
-    //-           a.button.is-info(@click="editarReporte(re)")
-    //-             span.icon.is-small
-    //-               i.far.fa-edit
-    //-           a.button.is-danger()
-    //-             span.icon.is-small
-    //-               i.fas.fa-trash-alt
+    button.button.is-info(v-show="bolTabla" @click="mostrar('','')") Mostrar Reparaciones
+    etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte")
     
-    form.paginaReporte(v-if="bolEditar")
+    form.paginaReporte(v-show="bolReporte")
       br
       br
       br
       h2.txtSubTitulo Cliente 
+      a.button.is-rounded.btnMostrarUsu(@click="cerrarverReporte")
+        span.icon.is-small
+          i.fas.fa-3x.fa-arrow-circle-left
+        //- span 
+        //-   b  Regresar
       br
-      .marco.marco2
-        .columns
-          .column.is-half
-            .field
-              .control.control
-                label.label Celular :
-                  input.input(v-model="reportes.celularCliente" name="cel" type="tel" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-          .column.is-half
-            .field
-              .control.control
-                label.label.telefono Telefono de Casa :
-                  input.input(v-model="reportes.telefonoCliente" name="tel" type="tel" placeholder="" )
-                  p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-        .control
-          label.label Nombre :
-            .control
-              input.input(v-model="reportes.nombreCliente" name="name" type="text" placeholder="" )
-      br
-      br
-      h2.txtSubTitulo Equipo 
-      br
-      .marco.marco2
-        .bd-content(style ="width:100%;")
+      .divReporte
+        .marco.marco2
           .columns
             .column.is-half
               .field
-                .control
-                  label.label IMEI o (SIM) :
-                    input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" )
+                .control.control
+                  label.label Celular :
+                    input.input(v-model="reportes.celularCliente" name="cel" type="tel" placeholder="" disabled="true")
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
-                  label.label Marca :
-                    input.input(v-model="reportes.marca" name="modelo" type="text" placeholder="")
             .column.is-half
               .field
-                .control
-                  label.label Accesorios :
-                    textarea.textarea.is-warning(v-model="reportes.acces" name="accesorios" placeholder="...")
-          .field
-            .control
-              label.label Modelo :
-                input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="")
-              label.label Condiciones del Equipo :
-                textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="")
-              label.label Fallas del Equipo :
-                textarea.textarea(v-model="reportes.fallas" name="condiciones" type="text" placeholder="")      
-    
-      br
-      .btnAceptar
-        a.button.is-success.btnCien.btnAceptar()  
-          span.icon.is-small
-            i.fas.fa-check
-          span Guardar   
+                .control.control
+                  label.label.telefono Telefono de Casa :
+                    input.input(v-model="reportes.telefonoCliente" name="tel" type="tel" placeholder="" disabled="true")
+                    p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+          .control
+            label.label Nombre :
+              .control
+                input.input(v-model="reportes.nombreCliente" name="name" type="text" placeholder="" disabled="true")
+        br
+        br
+        h2.txtSubTitulo Equipo 
+        br
+        .marco.marco2
+          .bd-content(style ="width:100%;")
+            .columns
+              .column.is-half
+                .field
+                  .control
+                    label.label IMEI o (SIM) :
+                      input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" disabled="true")
+                      p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
+                    label.label Marca :
+                      input.input(v-model="reportes.marca" name="modelo" type="text" placeholder="" disabled="true")
+              .column.is-half
+                .field
+                  .control
+                    label.label Accesorios :
+                      textarea.textarea(v-model="reportes.acces" name="accesorios" placeholder="..." disabled="true")
+            .field
+              .control
+                label.label Modelo :
+                  input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="" disabled="true")
+                label.label Condiciones del Equipo :
+                  textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="" disabled="true")
+                label.label Fallas del Equipo :
+                  textarea.textarea(v-model="reportes.fallas" name="condiciones" type="text" placeholder="" disabled="true")      
+      
+        br
+        .btnAceptar
+          a.button.is-success.btnCien.btnAceptar()  
+            span.icon.is-small
+              i.fas.fa-check
+            span Guardar   
     br                
     br                
     br                
@@ -120,6 +104,7 @@
 
 <script>
 import tablaReportes from './tablaReportesTec.vue'
+import compCotizar from './cotizar.vue'
 
 export default {
   name: 'subRepar',
@@ -127,6 +112,9 @@ export default {
   data (){
     return {
       clienteBuscar:'',
+      bolCotizar:false,
+      bolReporte:false,
+      bolTabla:true,
       filtro :new Object(),
       campoCompleto:'',
       listaReportes:[],
@@ -142,7 +130,6 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        
         }
     }
   },
@@ -162,7 +149,6 @@ export default {
     
     filtrar()
     {
-      // alert(`hola ${this.clienteBuscar}`);
       
       let reportesFiltrados=[];
       for(var repo in this.listaReportes)
@@ -186,14 +172,18 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        
         }
     },
-    editarReporte(re)
+    verReporte(re)
     {
-      var fec=this.fechaHoy();
-      alert(`Hoy es ${fec}`);
       this.reportes=re;
+      this.limpiarComps();
+      this.bolReporte=true;
+    },
+    cerrarverReporte(){
+      this.limpiarComps();
+      this.bolTabla=true;
+
     },
     fechaHoy:function(){
         var hoy = new Date();
@@ -203,10 +193,38 @@ export default {
         
 
         return dd+'/'+mm+'/'+yyyy;
+    },
+    mandarCotizar(coti)
+    {
+      this.$emit('coti',coti);
+    },
+    limpiarComps()
+    {
+      this.bolCotizar=false;
+      this.bolEditar=false;
+      this.bolReporte=false;
+      this.bolTabla=false;
+
+    },
+    cotizarReporte(re)
+    {
+      this.bolCotizar=true;
+      // alert(`Quieres editar a ${re.nombreCliente}`);
+      // var fec=this.fechaHoy();
+      // alert(`Hoy es ${fec}`);
+      // this.reportes=re;
+    },
+    cerrarCotizar()
+    {
+      // alert("se quien esres tabla");
+      this.limpiarComps();
+      this.bolTabla=true;
+
     }
   },
   components:{
-    etqTabla:tablaReportes
+    etqTabla:tablaReportes,
+    etqCotizar:compCotizar
   }
 
 }

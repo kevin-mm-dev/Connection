@@ -27,7 +27,7 @@
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqReparacion(v-if="bolReparaciones"  v-bind:repar="reportes" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones")
-    etqReparacionTec(v-if="bolReparacionesTec"  v-on:mostrarReparaciones="metAppMostrarReparaciones")
+    etqReparacionTec(v-if="bolReparacionesTec" v-bind:repar="reportes"  v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:coti="metAppCotizar")
     //- etqReparacion(v-if="bolReparaciones")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
     v-on:mostrarUsuarios="metAppMostrarUsuarios" v-on:actualizarUsuarios="metAppActualizarUsuarios" v-on:borrarUsuarios="metAppBorrarUsuarios")
@@ -49,6 +49,7 @@ import registroUsuario from './componentesVue/registroUsuario.vue'
 import login from './componentesVue/login.vue'
 
 import toastr from 'toastr';
+import jsPDF from 'jspdf';
 // import Firebase from 'firebase';
 import fire from './firebase.js';
 let usuarioActivo;
@@ -154,6 +155,7 @@ export default {
       this.bolForm=false;
       this.bolRegistrarUsuario=false;
       this.bolReparaciones=false;
+      this.bolReparacionesTec=false;
       this.bolReportes=false;
     },
     limpiarComponentes(){
@@ -168,6 +170,13 @@ export default {
       this.bolBarraAdmin=true;
     },
     cerrarSesion(){
+      /// https://parall.ax/products/jspdf (Probar)
+      /// https://rawgit.com/MrRio/jsPDF/master/docs/index.html  (Mas docu)
+      // var doc = new jsPDF();
+      //                Espacio Izq, espacio Top
+      // doc.text(this.usuarioTipo, 50, 10);
+      // doc.text(this.mensaje, 10, 10);
+      // doc.save('Exito.pdf');
       const SELF = this;
       fire.cerrarSesion().then(function() {
         SELF.limpiarEtiquetas();
@@ -311,6 +320,10 @@ export default {
           SELF.msgGuardado();
         }
       });
+    },
+    metAppCotizar(coti)
+    {
+      alert(`Hola ${coti.obser} que cuesta ${coti.precio}`);
     },
     msgGuardado(msg){
       toastr.success('Guardado exitosamente!! '+msg);

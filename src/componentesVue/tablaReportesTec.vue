@@ -13,11 +13,11 @@
 			><slot name="thead"/>
       <tr>
         <th><b>Cliente</b></th>
-        <th>Celular</th>
+        <!-- <th>Celular</th> -->
         <th>Fallas</th>
         <th style="width:1rem;">Fecha</th>
-        <th>Reparado / Cotizado</th>
-        <th>Opciones</th>
+        <th>Revisar</th>
+        <th>Cotizare</th>
         </tr> 
         </thead>
 		<tbody class="propiedadesTabla" name="tbody" ref="tbody"
@@ -27,89 +27,19 @@
 
 	  <tr v-for="re in listaReportes" v-bind:key="re.key">
             <th>{{re.nombreCliente}}</th>
-            <th>{{re.celularCliente}}</th>
+            <!-- <th>{{re.celularCliente}}</th> -->
             <th>{{re.fallas}}</th>
             <th style="width:1rem;">{{re.fecha}}</th>
 			<th  class="tablaOpciones">
-				<a class="button is-danger"><span class="icon is-small"><i class="far fa-times-circle"></i></span></a>
-				<a style="margin-left:3rem;" class="button is-success"><span class="icon is-small"><i class="far fa-check-circle"></i></span></a>
+				<a class="button is-info" @click="verReporte(re)"><span class="icon is-small"><i class="far fa-eye"></i></span></a>
+				<!-- <a style="margin-left:3rem;" class="button is-success"><span class="icon is-small"><i class="far fa-check-circle"></i></span></a> -->
             </th>
             <th class="tablaOpciones">
-                <p class="buttons"><a class="button is-info" @click="editarReporte(re)"><span class="icon is-small"><i class="far fa-edit"></i></span></a><a class="button is-danger"><span class="icon is-small"><i class="fas fa-trash-alt"></i></span></a></p>
+                <p class="buttons"><a  @click="cotizarReporte(re)" class="button is-info"><span class="icon is-small"><i class="far fa-edit"></i></span></a> </p>
             </th>
 			
         </tr>
-		 <!--
-       <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr>
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr> 
-      <tr>
-        <th><b>kevin</b></th>
-        <th>9430912</th>
-        <th>Batería</th>
-        <th>21/61/51385</th>
-        <th>X</th>
-        </tr>  -->
+		
       </tbody>
 		<tfoot name="tfoot" ref="tfoot"
 			v-if="includeFooter"
@@ -198,9 +128,14 @@ export default {
 		onDropHeader(e) {
 			this.$emit("header-drop", e)
 		},
-		editarReporte(re)
+		cotizarReporte(re)
 		{
-			this.$emit("tablaEditar", re)
+			this.$emit("cotizarReporte", re)
+		},
+		verReporte(re)
+		{
+			this.$emit("verReporte", re)
+
 		}
 	},
 }

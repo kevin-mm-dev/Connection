@@ -31,8 +31,8 @@
             <th>{{re.fallas}}</th>
             <th style="width:1rem;">{{re.fecha}}</th>
 			<th  class="tablaOpciones">
-				<a class="button is-danger"><span class="icon is-small"><i class="far fa-times-circle"></i></span></a>
-				<a style="margin-left:3rem;" class="button is-success"><span class="icon is-small"><i class="far fa-check-circle"></i></span></a>
+				<a class="button is-danger"><span class="icon is-small"><i class="fas fa-frown"></i></span></a>
+				<a style="margin-left:3rem;" class="button is-success"><span class="icon is-small"><i class="far fa-laugh-beam"></i></span></a>
             </th>
             <th class="tablaOpciones">
                 <p class="buttons"><a class="button is-info" @click="editarReporte(re)"><span class="icon is-small"><i class="far fa-edit"></i></span></a><a class="button is-danger"><span class="icon is-small"><i class="fas fa-trash-alt"></i></span></a></p>
