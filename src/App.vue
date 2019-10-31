@@ -323,7 +323,18 @@ export default {
     },
     metAppCotizar(coti)
     {
-      alert(`Hola ${coti.obser} que cuesta ${coti.precio}`);
+      const SELF= this;
+      debugger;
+
+      fire.agregarCoti(coti,function(error){
+        if (error) {
+          SELF.msgError();
+          }
+        else {
+          SELF.msgGuardado();
+        }
+      });
+      // alert(`Hola ${coti.obser} que key ${coti.repKey}`);
     },
     msgGuardado(msg){
       toastr.success('Guardado exitosamente!! '+msg);

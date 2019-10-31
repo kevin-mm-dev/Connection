@@ -1,6 +1,10 @@
 <template lang="pug">
   #cotizarReporte
     .fondoTitulo
+    h1.txtTitulo Reparaciones Técnico
+    hr.txtTitulo
+    br
+    br
     a.button.is-rounded.btnMostrarUsu(@click="cerrarCotizar")
       span.icon.is-small
         i.fas.fa-3x.fa-arrow-circle-left
@@ -35,7 +39,7 @@
                   
       br
       .btnAceptar
-        button.button.is-success.btnCien.btnAceptar(@click="actualizarUsuario" type='submit' name='submit' value='guardar' )  
+        button.button.is-success.btnCien.btnAceptar(@click="enviarCoti" type='submit' name='submit' value='guardar' )  
           span.icon.is-small
             i.fas.fa-check
           span Guardar 
@@ -116,7 +120,7 @@ export default {
       //   }
       // }
 
-      this.$emit('cotizar',this.coti);
+      // this.$emit('cotizar',this.coti);
       // alert("Ya te lo envio");
     },
     
@@ -158,7 +162,7 @@ export default {
       this.$emit('borrarUsuarios',us.key);
       this.$emit('mostrarUsuarios');
     },
-    actualizarUsuario(){
+    enviarCoti(){
       // var fec=new Date('yyyy-mm-dd');
       // alert(`Hoy es ${fec}`);
 
@@ -216,7 +220,7 @@ html{
 {
     justify-content: center;
     align-items: center; 
-    background-image: url("../assets/fondo.png");
+    // background-image: url("../assets/fondo.png");
     background-size: cover;
 }
 .imgFooter{

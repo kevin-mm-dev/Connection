@@ -1,41 +1,37 @@
 <template lang="pug">
-  #subAgregar
+  #subReparTec
     .fondoTitulo
     h1.txtTitulo Reparaciones Técnico
     hr.txtTitulo
     br
     br
-    br
-    br
     etqCotizar(v-show="bolCotizar" v-on:cotizar="mandarCotizar" v-on:cerrarCotizar="cerrarCotizar")
-    .buscar(v-show="bolTabla")
-      form.columns(@submit.prevent="mostrar('nombreCliente',clienteBuscar)")
-        .column.is-three-quarters.divBarraBuscar
-          .field
-            .control
-              input.input.is-primary.txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
-        .column
-          .field
-            .control
-              button.button.is-success(type="submit ") BUSCAR
+      
 
-    br
-    br
-    button.button.is-info(v-show="bolTabla" @click="mostrar('','')") Mostrar Reparaciones
+    .divTabla(v-show="bolTabla")
+      br
+      br
+      br
+      form.columns(@submit.prevent="mostrar('nombreCliente',clienteBuscar)")
+          .column.is-three-quarters.divBarraBuscar
+            .field
+              .control
+                input.input.is-primary.txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
+          .column
+            .field
+              .control
+                button.button.is-success(type="submit ") BUSCAR
+      button.button.is-info( @click="mostrar('','')") Mostrar Reparaciones
     etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte")
     
     form.paginaReporte(v-show="bolReporte")
-      br
-      br
-      br
-      h2.txtSubTitulo Cliente 
       a.button.is-rounded.btnMostrarUsu(@click="cerrarverReporte")
         span.icon.is-small
           i.fas.fa-3x.fa-arrow-circle-left
-        //- span 
-        //-   b  Regresar
-      br
+      
       .divReporte
+        h2.txtSubTitulo Cliente 
+        br
         .marco.marco2
           .columns
             .column.is-half
@@ -85,10 +81,10 @@
       
         br
         .btnAceptar
-          a.button.is-success.btnCien.btnAceptar()  
+          a.button.is-info.btnCien.btnAceptar(@click="cotizarReporte()")  
             span.icon.is-small
               i.fas.fa-check
-            span Guardar   
+            span Cotizar   
     br                
     br                
     br                
@@ -163,6 +159,7 @@ export default {
     limpiarReporte(){
       this.reportes={
         usuario:'',
+        key:'',
         nombreCliente:'',
         celularCliente:'',
         telefonoCliente:'',
@@ -196,6 +193,11 @@ export default {
     },
     mandarCotizar(coti)
     {
+      // debugger;
+      coti.repoKey=this.reportes['key'];
+      this.limpiarComps();
+      this.bolCotizar=true;
+      // // this.bolTabla=true;
       this.$emit('coti',coti);
     },
     limpiarComps()
@@ -206,13 +208,16 @@ export default {
       this.bolTabla=false;
 
     },
+    
     cotizarReporte(re)
     {
+      this.reportes=re;
+      this.limpiarComps();
       this.bolCotizar=true;
       // alert(`Quieres editar a ${re.nombreCliente}`);
       // var fec=this.fechaHoy();
       // alert(`Hoy es ${fec}`);
-      // this.reportes=re;
+      
     },
     cerrarCotizar()
     {
@@ -249,13 +254,13 @@ html{
   display: flex;
   justify-items: right;
 }
-#registroUsuario
+#subReparTec
 {
   
     justify-content: center;
     align-items: center; 
-    background-image: url("../assets/fondo.png");
-    background-size: cover;
+    background-image: url("../assets/papel.jpg");
+    // background-size: cover;
 
 }
 .imgFooter{

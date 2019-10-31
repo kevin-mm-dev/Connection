@@ -135,7 +135,6 @@ export default {
 		verReporte(re)
 		{
 			this.$emit("verReporte", re)
-
 		}
 	},
 }

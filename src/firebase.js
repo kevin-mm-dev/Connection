@@ -18,6 +18,7 @@ var admin = require("firebase");
 var db = admin.database();
 var reportesRef = db.ref("reportes");
 var usuariosRef = db.ref("usuarios");
+var cotiRef = db.ref("cotizaciones");
 // // var reportesRefe = firebase.initializeApp(config).ref('reportes');
 
 export default new Vue({
@@ -49,6 +50,11 @@ export default new Vue({
         },
         agregarReporte(reporte, callback) {
             reportesRef.push(reporte, function(error) {
+                callback(error);
+            });
+        },
+        agregarCoti(coti, callback) {
+            cotiRef.push(coti, function(error) {
                 callback(error);
             });
         },
@@ -106,7 +112,6 @@ export default new Vue({
         },
         mostrarReparaciones(filtro, callback) {
             var reportes = [];
-
             reportesRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
                 for (var propiedad in objeto) {
