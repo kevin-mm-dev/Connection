@@ -148,6 +148,7 @@ export default {
         usuario: '',
         contrasena: '',
         tipo: 'Gerente',
+        estatus: 1,
       }
     }
   },
@@ -172,6 +173,7 @@ export default {
             usuario: '',
             contrasena: '',
             tipo: 'Gerente',
+            estatus: 1,
           }
         }
       }

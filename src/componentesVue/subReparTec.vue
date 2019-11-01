@@ -20,8 +20,12 @@
           .column
             .field
               .control
-                button.button.is-success(type="submit ") BUSCAR
+                button.button.is-success(type="submit") BUSCAR
       button.button.is-info( @click="mostrar('','')") Mostrar Reparaciones
+    .select(v-show="bolTabla")
+      button.button.is-success(@click="filtrarRepor") Filtrar
+      select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
+        option( v-for="us in usuarios") {{us.usuario}}          {{us.key}} 
     etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte")
     
     form.paginaReporte(v-show="bolReporte")
@@ -104,16 +108,18 @@ import compCotizar from './cotizar.vue'
 
 export default {
   name: 'subRepar',
-  props:['repar'],
+  props:['repar','usuarios'],
   data (){
     return {
       clienteBuscar:'',
+      datosUsuario:[],
       bolCotizar:false,
       bolReporte:false,
       bolTabla:true,
       filtro :new Object(),
       campoCompleto:'',
-      listaReportes:[],
+      reporDeUsuario:'',
+      listaReportes:new Object(),
       bolEditar:true,
         reportes:{
         usuario:'',
@@ -133,11 +139,14 @@ export default {
     
     mostrar(tipo,valor) {
       // alert('enviando...!')
-      
+      // debugger;
       this.filtro.tipo=tipo;
       this.filtro.valor=valor;
 
       this.$emit('mostrarReparaciones',this.filtro);
+      this.$emit('ensenarUsuarios',this.usuarios);
+      // this.listaReportes=new Object();
+      // this.listaReportes=this.repar;
       // setTimeout(heredarReportes(),3000);
       
       // this.limpiarReporte();
@@ -145,7 +154,7 @@ export default {
     
     filtrar()
     {
-      
+      // debugger;
       let reportesFiltrados=[];
       for(var repo in this.listaReportes)
       {
@@ -196,9 +205,10 @@ export default {
       // debugger;
       coti.repoKey=this.reportes['key'];
       this.limpiarComps();
-      this.bolCotizar=true;
-      // // this.bolTabla=true;
       this.$emit('coti',coti);
+      this.limpiarReporte();
+      this.bolTabla=true;
+      this.mostrar('','');
     },
     limpiarComps()
     {
@@ -211,13 +221,28 @@ export default {
     
     cotizarReporte(re)
     {
-      this.reportes=re;
+      debugger
+      if(re!=undefined)
+      {
+        this.reportes=re;
+      }
       this.limpiarComps();
       this.bolCotizar=true;
       // alert(`Quieres editar a ${re.nombreCliente}`);
       // var fec=this.fechaHoy();
       // alert(`Hoy es ${fec}`);
       
+    },
+    filtrarRepor()
+    {
+      // alert("Buscando reportes de... "+this.reporDeUsuario.Remove(0,));
+      // debugger;
+      var inicio=this.reporDeUsuario.indexOf(' ');
+      var clave=this.reporDeUsuario.substring(inicio+1);
+      // alert("Buscando reportes de... "+clave);
+      this.filtro.tipo='keyUsuario';
+      this.filtro.valor=clave;
+      this.$emit('mostrarReparaciones',this.filtro);
     },
     cerrarCotizar()
     {
@@ -278,5 +303,9 @@ html{
     font-size: 1.5rem;
     color: #363636;
     
+}
+.opcionesUsuarios
+{
+  width: 8rem;
 }
 </style>

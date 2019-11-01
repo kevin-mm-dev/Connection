@@ -42,7 +42,7 @@
         button.button.is-success.btnCien.btnAceptar(@click="enviarCoti" type='submit' name='submit' value='guardar' )  
           span.icon.is-small
             i.fas.fa-check
-          span Guardar 
+          span Añadir 
     //- br                
     //- br                
     //- br                

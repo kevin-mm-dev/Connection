@@ -53,6 +53,13 @@ export default new Vue({
                 callback(error);
             });
         },
+        marcarCotizadoReporte(keyRepo, callback) {
+            reportesRef.child(keyRepo).update({
+                cotizado: 1,
+            }, function(error) {
+                callback(error);
+            });
+        },
         agregarCoti(coti, callback) {
             cotiRef.push(coti, function(error) {
                 callback(error);
@@ -71,139 +78,159 @@ export default new Vue({
 
             usuariosRef.child(usuarioActualizado.actKey).update({
                 usuario: usuarioActualizado.nuevoUsuario,
-                contrasena: usuarioActualizado.nuevaContrasena
+                contrasena: usuarioActualizado.nuevaContrasena,
+                tipo: usuarioActualizado.nuevoTipo
             }, function(error) {
                 callback(error);
             });
         },
         borrarUsuario(keyUsuario, callback) {
             console.log("Quieres borrar " + keyUsuario);
-
-            db.ref('usuarios/' + keyUsuario).remove(callback());
+            // db.ref('usuarios/' + keyUsuario).remove(callback());
+            usuariosRef.child(keyUsuario).update({
+                estatus: 0
+            }, function(error) {
+                callback(error);
+            });
         },
         mostrarUsuarios(usuarios, callback) {
-            // alert("Ya pidio usuarios 1");
 
-            // return new Promise((resolver, rechazar) => {
-
-            //         // alert("Entro 2");
-
-            //         resolver();
-            //     })
-            // .then(() => {
-            //     console.log('Haz esto 4');
-            // }).catch(() => {
-            //     console.log('Algo fallo 4');
-
-            // });
             var usuarios = [];
             usuariosRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
                 for (var propiedad in objeto) {
-                    usuarios.unshift({
-                        'key': propiedad,
-                        usuario: objeto[propiedad].usuario,
-                        contrasena: objeto[propiedad].contrasena,
-                        tipo: objeto[propiedad].tipo,
-                    });
+                    if (objeto[propiedad].estatus == 1) {
+
+                        usuarios.unshift({
+                            'key': propiedad,
+                            usuario: objeto[propiedad].usuario,
+                            contrasena: objeto[propiedad].contrasena,
+                            tipo: objeto[propiedad].tipo,
+                        });
+                    }
                 }
                 callback(usuarios);
             });
         },
         mostrarReparaciones(filtro, callback) {
             var reportes = [];
+            // debugger;
+            var consultar = true;
+
+
             reportesRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
-                for (var propiedad in objeto) {
-                    // debugger;
-                    switch (filtro.tipo) {
-                        case 'fecha':
-                            if (filtro.valor == objeto[propiedad].fecha && objeto[propiedad].reparado == 0) {
-                                reportes.unshift({
-                                    'key': propiedad,
-                                    nombreCliente: objeto[propiedad].nombreCliente,
-                                    celularCliente: objeto[propiedad].celularCliente,
-                                    fallas: objeto[propiedad].fallas,
-                                    acces: objeto[propiedad].acces,
-                                    chip: objeto[propiedad].chip,
-                                    cond: objeto[propiedad].cond,
-                                    cotizado: objeto[propiedad].cotizado,
-                                    marca: objeto[propiedad].marca,
-                                    modelo: objeto[propiedad].modelo,
-                                    reparado: objeto[propiedad].reparado,
-                                    telefonoCliente: objeto[propiedad].telefonoCliente,
-                                    usuario: objeto[propiedad].usuario,
-                                    fecha: objeto[propiedad].fecha,
-                                });
-                            }
-                            break;
-                        case 'nombreCliente':
-                            if (filtro.valor == objeto[propiedad].nombreCliente && objeto[propiedad].reparado == 0) {
-                                reportes.unshift({
-                                    'key': propiedad,
-                                    nombreCliente: objeto[propiedad].nombreCliente,
-                                    celularCliente: objeto[propiedad].celularCliente,
-                                    fallas: objeto[propiedad].fallas,
-                                    acces: objeto[propiedad].acces,
-                                    chip: objeto[propiedad].chip,
-                                    cond: objeto[propiedad].cond,
-                                    cotizado: objeto[propiedad].cotizado,
-                                    marca: objeto[propiedad].marca,
-                                    modelo: objeto[propiedad].modelo,
-                                    reparado: objeto[propiedad].reparado,
-                                    telefonoCliente: objeto[propiedad].telefonoCliente,
-                                    usuario: objeto[propiedad].usuario,
-                                    fecha: objeto[propiedad].fecha,
-                                });
-                            }
-                            break;
-                        case 'reparado':
-                            if (filtro.valor == objeto[propiedad].reparado && objeto[propiedad].reparado == 0) {
-                                reportes.unshift({
-                                    'key': propiedad,
-                                    nombreCliente: objeto[propiedad].nombreCliente,
-                                    celularCliente: objeto[propiedad].celularCliente,
-                                    fallas: objeto[propiedad].fallas,
-                                    acces: objeto[propiedad].acces,
-                                    chip: objeto[propiedad].chip,
-                                    cond: objeto[propiedad].cond,
-                                    cotizado: objeto[propiedad].cotizado,
-                                    marca: objeto[propiedad].marca,
-                                    modelo: objeto[propiedad].modelo,
-                                    reparado: objeto[propiedad].reparado,
-                                    telefonoCliente: objeto[propiedad].telefonoCliente,
-                                    usuario: objeto[propiedad].usuario,
-                                    fecha: objeto[propiedad].fecha,
-                                });
-                            }
+                if (consultar) {
+                    consultar = false;
+                    for (var propiedad in objeto) {
+                        // debugger;
+                        switch (filtro.tipo) {
+                            case 'fecha':
+                                if (filtro.valor == objeto[propiedad].fecha && objeto[propiedad].reparado == 0) {
+                                    reportes.unshift({
+                                        'key': propiedad,
+                                        nombreCliente: objeto[propiedad].nombreCliente,
+                                        celularCliente: objeto[propiedad].celularCliente,
+                                        fallas: objeto[propiedad].fallas,
+                                        acces: objeto[propiedad].acces,
+                                        chip: objeto[propiedad].chip,
+                                        cond: objeto[propiedad].cond,
+                                        cotizado: objeto[propiedad].cotizado,
+                                        marca: objeto[propiedad].marca,
+                                        modelo: objeto[propiedad].modelo,
+                                        reparado: objeto[propiedad].reparado,
+                                        telefonoCliente: objeto[propiedad].telefonoCliente,
+                                        usuario: objeto[propiedad].usuario,
+                                        fecha: objeto[propiedad].fecha,
+                                    });
+                                }
+                                break;
+                            case 'nombreCliente':
+                                if (filtro.valor == objeto[propiedad].nombreCliente && objeto[propiedad].reparado == 0) {
+                                    reportes.unshift({
+                                        'key': propiedad,
+                                        nombreCliente: objeto[propiedad].nombreCliente,
+                                        celularCliente: objeto[propiedad].celularCliente,
+                                        fallas: objeto[propiedad].fallas,
+                                        acces: objeto[propiedad].acces,
+                                        chip: objeto[propiedad].chip,
+                                        cond: objeto[propiedad].cond,
+                                        cotizado: objeto[propiedad].cotizado,
+                                        marca: objeto[propiedad].marca,
+                                        modelo: objeto[propiedad].modelo,
+                                        reparado: objeto[propiedad].reparado,
+                                        telefonoCliente: objeto[propiedad].telefonoCliente,
+                                        usuario: objeto[propiedad].usuario,
+                                        fecha: objeto[propiedad].fecha,
+                                    });
+                                }
+                                break;
+                            case 'keyUsuario':
+                                if (filtro.valor == objeto[propiedad].usuario && objeto[propiedad].reparado == 0) {
+                                    reportes.unshift({
+                                        'key': propiedad,
+                                        nombreCliente: objeto[propiedad].nombreCliente,
+                                        celularCliente: objeto[propiedad].celularCliente,
+                                        fallas: objeto[propiedad].fallas,
+                                        acces: objeto[propiedad].acces,
+                                        chip: objeto[propiedad].chip,
+                                        cond: objeto[propiedad].cond,
+                                        cotizado: objeto[propiedad].cotizado,
+                                        marca: objeto[propiedad].marca,
+                                        modelo: objeto[propiedad].modelo,
+                                        reparado: objeto[propiedad].reparado,
+                                        telefonoCliente: objeto[propiedad].telefonoCliente,
+                                        usuario: objeto[propiedad].usuario,
+                                        fecha: objeto[propiedad].fecha,
+                                    });
+                                }
+                                break;
+                            case 'reparado':
+                                if (filtro.valor == objeto[propiedad].reparado && objeto[propiedad].reparado == 0) {
+                                    reportes.unshift({
+                                        'key': propiedad,
+                                        nombreCliente: objeto[propiedad].nombreCliente,
+                                        celularCliente: objeto[propiedad].celularCliente,
+                                        fallas: objeto[propiedad].fallas,
+                                        acces: objeto[propiedad].acces,
+                                        chip: objeto[propiedad].chip,
+                                        cond: objeto[propiedad].cond,
+                                        cotizado: objeto[propiedad].cotizado,
+                                        marca: objeto[propiedad].marca,
+                                        modelo: objeto[propiedad].modelo,
+                                        reparado: objeto[propiedad].reparado,
+                                        telefonoCliente: objeto[propiedad].telefonoCliente,
+                                        usuario: objeto[propiedad].usuario,
+                                        fecha: objeto[propiedad].fecha,
+                                    });
+                                }
 
-                            break;
-                        default:
-                            reportes.unshift({
-                                'key': propiedad,
-                                nombreCliente: objeto[propiedad].nombreCliente,
-                                celularCliente: objeto[propiedad].celularCliente,
-                                fallas: objeto[propiedad].fallas,
-                                acces: objeto[propiedad].acces,
-                                chip: objeto[propiedad].chip,
-                                cond: objeto[propiedad].cond,
-                                cotizado: objeto[propiedad].cotizado,
-                                marca: objeto[propiedad].marca,
-                                modelo: objeto[propiedad].modelo,
-                                reparado: objeto[propiedad].reparado,
-                                telefonoCliente: objeto[propiedad].telefonoCliente,
-                                usuario: objeto[propiedad].usuario,
-                                fecha: objeto[propiedad].fecha,
-                            });
-                            break;
+                                break;
+                            default:
+                                reportes.unshift({
+                                    'key': propiedad,
+                                    nombreCliente: objeto[propiedad].nombreCliente,
+                                    celularCliente: objeto[propiedad].celularCliente,
+                                    fallas: objeto[propiedad].fallas,
+                                    acces: objeto[propiedad].acces,
+                                    chip: objeto[propiedad].chip,
+                                    cond: objeto[propiedad].cond,
+                                    cotizado: objeto[propiedad].cotizado,
+                                    marca: objeto[propiedad].marca,
+                                    modelo: objeto[propiedad].modelo,
+                                    reparado: objeto[propiedad].reparado,
+                                    telefonoCliente: objeto[propiedad].telefonoCliente,
+                                    usuario: objeto[propiedad].usuario,
+                                    fecha: objeto[propiedad].fecha,
+                                });
+                                break;
+                        }
                     }
+                    callback(reportes);
                 }
-                callback(reportes);
             });
         },
         actualizarReparaciones(reparacionActualizado, callback) {
-
-
             reportesRef.child(reparacionActualizado.Key).update({
                 nombreCliente: reparacionActualizado.nombreCliente,
                 celularCliente: reparacionActualizado.celularCliente

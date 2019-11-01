@@ -27,7 +27,7 @@
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqReparacion(v-if="bolReparaciones"  v-bind:repar="reportes" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones")
-    etqReparacionTec(v-if="bolReparacionesTec" v-bind:repar="reportes"  v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:coti="metAppCotizar")
+    etqReparacionTec(v-if="bolReparacionesTec" v-bind:repar="reportes" v-bind:usuarios="usuarios"  v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:ensenarUsuarios="metAppMostrarUsuarios" v-on:coti="metAppCotizar")
     //- etqReparacion(v-if="bolReparaciones")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
     v-on:mostrarUsuarios="metAppMostrarUsuarios" v-on:actualizarUsuarios="metAppActualizarUsuarios" v-on:borrarUsuarios="metAppBorrarUsuarios")
@@ -247,8 +247,14 @@ export default {
     },
     metAppMostrarReparaciones(filtro){
       const SELF =this;
+      // debugger;
       fire.mostrarReparaciones(filtro,function(params) {
-        SELF.reportes=params;
+          SELF.reportes=params;
+      });
+    },
+    metAppEnsenarUsuarios(usuariosConReportes){
+      fire.mostrarUsuarios(usuariosConReportes,function(params) {
+        usuariosConReportes=params;
       });
     },
     metAppActualizarReparaciones(){
@@ -324,7 +330,9 @@ export default {
     metAppCotizar(coti)
     {
       const SELF= this;
-      debugger;
+      // debugger;
+      /// Avisar usuario que fue cotizado
+      /// Avisar sucursal que fue cotizado 
 
       fire.agregarCoti(coti,function(error){
         if (error) {
@@ -332,7 +340,21 @@ export default {
           }
         else {
           SELF.msgGuardado();
-        }
+            fire.marcarCotizadoReporte(coti.repoKey,function(error){
+              if (error) {
+                // SELF.msgError();
+                }
+              else {
+                // SELF.msgGuardado();
+                var filtro=new Object();
+                filtro.tipo='';
+                filtro.valor='';
+                fire.mostrarReparaciones(filtro,function(params) {
+                 SELF.reportes=params;
+                });
+              }
+            })
+            }
       });
       // alert(`Hola ${coti.obser} que key ${coti.repKey}`);
     },

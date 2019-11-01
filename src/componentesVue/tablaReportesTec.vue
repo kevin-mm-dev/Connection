@@ -35,7 +35,16 @@
 				<!-- <a style="margin-left:3rem;" class="button is-success"><span class="icon is-small"><i class="far fa-check-circle"></i></span></a> -->
             </th>
             <th class="tablaOpciones">
-                <p class="buttons"><a  @click="cotizarReporte(re)" class="button is-info"><span class="icon is-small"><i class="far fa-edit"></i></span></a> </p>
+				<a  @click="cotizarReporte(re)" class="button is-info">
+					<span class="icon is-small">
+						<i class="far fa-edit"></i>
+					</span>
+				</a>
+				<a v-if="re.cotizado==1" class="button is-success">
+					<span class="icon is-small">
+						<i class="far fa-laugh-beam"></i>
+					</span>
+				</a>
             </th>
 			
         </tr>
