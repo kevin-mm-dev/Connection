@@ -94,7 +94,6 @@ export default new Vue({
             });
         },
         mostrarUsuarios(usuarios, callback) {
-
             var usuarios = [];
             usuariosRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
@@ -110,6 +109,27 @@ export default new Vue({
                     }
                 }
                 callback(usuarios);
+            });
+        },
+        mostrarCoti(repoKey, callback) {
+
+            var coti = [];
+            cotiRef.on("value", function(snapshot) {
+                var objeto = snapshot.val();
+                for (var propiedad in objeto) {
+                    if (objeto[propiedad].repoKey == repoKey) {
+                        coti.unshift({
+                            repoKey: objeto[propiedad].repoKey,
+                            fecha: objeto[propiedad].fecha,
+                            obser: objeto[propiedad].obser,
+                            precio: objeto[propiedad].precio,
+                        });
+                    }
+                    if (coti != "") {
+                        callback(coti);
+                        coti = [];
+                    }
+                }
             });
         },
         mostrarReparaciones(filtro, callback) {

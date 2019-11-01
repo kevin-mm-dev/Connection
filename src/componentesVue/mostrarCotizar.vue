@@ -5,7 +5,7 @@
     hr.txtTitulo
     br
     br
-    a.button.is-rounded.btnMostrarUsu(@click="cerrarCotizar")
+    //- a.button.is-rounded.btnMostrarUsu(@click="cerrarCotizar")
       span.icon.is-small
         i.fas.fa-3x.fa-arrow-circle-left
     form.bd-content(style ="width:100%;" @submit.prevent="metSubmit" v-show="registrar")
@@ -29,7 +29,6 @@
                 label.label Fecha Entrega :  
                   input.input.date(v-model="coti.fecha" type="date" name="fecha" min="2018-03-25" max="2030-12-25")
                   p.help.is-danger(v-if="campoIncompletoUs") Este campo es obligatorio
-                  
       br
       .btnAceptar
         button.button.is-success.btnCien.btnAceptar(@click="enviarCoti" type='submit' name='submit' value='guardar' )  
@@ -38,9 +37,7 @@
           span Añadir 
     //- br                
     //- br                
-    //- br                
-    
-                
+    //- br 
     //- br
     //- br                
     //- br
@@ -75,16 +72,8 @@ export default {
       campoIncompletoCont1:false,
       campoIncompletoCont2:false,
       confContrasena:'',
-      usuarioEdit:{
-        actKey:'',
-        nuevoUsuario: '',
-        nuevaContrasena: '',
-        nuevoTipo: '',
-      },
-      usuarios:{
-        usuario: '',
-        contrasena: '',
-        tipo: 'Gerente',
+      listCoti:{
+        
       }
     }
   },

@@ -1,56 +1,37 @@
-
 <template lang="pug">
   #subAgregar
     .fondoTitulo
     h1.txtTitulo Reparaciones
     hr.txtTitulo
-    br
-    br
-    br
-    br
-    .buscar
-      form.columns(@submit.prevent="mostrar('nombreCliente',clienteBuscar)")
-        .column.is-three-quarters.divBarraBuscar
-          .field
-            .control
-              input.input.is-primary.txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
-        .column
-          .field
-            .control
-              button.button.is-success(type="submit ") BUSCAR
-
-    br
-    br
-    button.button.is-info(@click="mostrar('','')") Mostrar Reparaciones
-    etqTabla(v-bind:listaReportes="repar"  v-on:tablaEditar="editarReporte")
-    //- table.table.is-hoverable.marco2
-    //-   thead
-    //-     tr
-    //-       th Cliente
-    //-       th Celular
-    //-       th Fallas
-    //-       th Fecha
-    //-       th Opciones
-    //-   tbody
-    //-     tr(v-for="re in repar")
-    //-       th {{re.nombreCliente}}
-    //-       th {{re.celularCliente}}
-    //-       th {{re.fallas}}
-    //-       th {{re.fecha}}
-    //-       th.tablaOpciones 
-    //-         p.buttons
-    //-           a.button.is-info(@click="editarReporte(re)")
-    //-             span.icon.is-small
-    //-               i.far.fa-edit
-    //-           a.button.is-danger()
-    //-             span.icon.is-small
-    //-               i.fas.fa-trash-alt
     
+    .divTabla(v-show="bolTabla")
+      br
+      br
+      br
+      form.columns(@submit.prevent="mostrar('nombreCliente',clienteBuscar)")
+          .column.is-three-quarters.divBarraBuscar
+            .field
+              .control
+                input.input.is-primary.txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
+          .column
+            .field
+              .control
+                button.button.is-success(type="submit") BUSCAR
+      button.button.is-info( @click="mostrar('','')") Mostrar Reparaciones
+    .select(v-show="bolTabla")
+      select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
+        option( v-for="us in usuarios") {{us.usuario}}
+    button.button.is-success(v-show="bolTabla" @click="filtrarRepor") Filtrar
+    .select(v-show="1<0")
+      select(id="selctLlaves" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
+        option( v-for="us in usuarios") {{us.key}} 
+    etqTabla(v-show="bolTabla" v-bind:usuarioKey="usuarioKey" v-bind:listaReportes="repar"  v-on:tablaEditar="editarReporte" v-on:mostrarCoti="mostrarCoti")
     form.paginaReporte(v-if="bolEditar")
-      br
-      br
-      br
+      a.button.is-rounded.btnMostrarUsu(@click="cerrarverReporte")
+          span.icon.is-small
+            i.fas.fa-3x.fa-arrow-circle-left
       h2.txtSubTitulo Cliente 
+      br
       br
       .marco.marco2
         .columns
@@ -116,21 +97,46 @@
     .pound                
     img.imgFooter(src="../assets/celular.png")
     footer.footer
+    #modalMostrarCotizar.modal.is-close
+      .modal-background
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title Cotización
+          button.delete(@click="cerrarModal" aria-label='close')
+        section.modal-card-body
+          .content(v-for="cot in coti")
+            h1 Observaciones
+            textarea.textarea(v-model="cot.obser" disabled)
+            .field
+              .control
+            label Precio:
+            input.input(v-model="cot.precio" disabled) 
+            .field
+              .control
+            label Fecha Termina:
+            input.input(v-model="cot.fecha" disabled) 
+        footer.modal-card-foot
+          //- button.button.is-success(@click="mandarReparar") Reparar
+          button.button.is-success(@click="cerrarModal") Okey
+
 </template>
 
 <script>
 import tablaReportes from './tablaReportes.vue'
+import mostrarCoti from './mostrarCotizar.vue'
 
 export default {
   name: 'subRepar',
-  props:['repar'],
+  props:['repar','coti','usuarios','usuarioKey'],
   data (){
     return {
       clienteBuscar:'',
       filtro :new Object(),
       campoCompleto:'',
+      reporDeUsuario:'',
       listaReportes:[],
-      bolEditar:true,
+      bolEditar:false,
+      bolTabla:true,
         reportes:{
         usuario:'',
         nombreCliente:'',
@@ -151,10 +157,11 @@ export default {
     mostrar(tipo,valor) {
       // alert('enviando...!')
       
-      this.filtro.tipo=tipo;
+      this.filtro.tipo='keyUsuario';
       this.filtro.valor=valor;
 
       this.$emit('mostrarReparaciones',this.filtro);
+      this.$emit('ensenarUsuarios',this.usuarios);
       // setTimeout(heredarReportes(),3000);
       
       // this.limpiarReporte();
@@ -162,7 +169,6 @@ export default {
     
     filtrar()
     {
-      
       let reportesFiltrados=[];
       for(var repo in this.listaReportes)
       {
@@ -191,8 +197,15 @@ export default {
     editarReporte(re)
     {
       var fec=this.fechaHoy();
-      alert(`Hoy es ${fec}`);
+      this.limpiarVistas();
+      this.bolEditar=true;
+      // alert(`Hoy es ${fec}`);
       this.reportes=re;
+    },
+    limpiarVistas()
+    {
+      this.bolEditar=false;
+      this.bolTabla=false;
     },
     fechaHoy:function(){
         var hoy = new Date();
@@ -202,10 +215,46 @@ export default {
         
 
         return dd+'/'+mm+'/'+yyyy;
+    },
+    mostrarCoti(re)
+    {
+      this.$emit('mostrarCoti',re.key);
+      this.abrirModal();
+      
+    },
+    abrirModal(){
+      var modal= document.getElementById("modalMostrarCotizar");
+      modal.classList.remove('is-close');
+      modal.classList.add('is-active');
+    },
+    cerrarModal(){
+      console.log("Nada por?");
+      var modal= document.getElementById("modalMostrarCotizar");
+      modal.classList.remove('is-active');
+      modal.classList.add('is-close');
+      
+    },filtrarRepor()
+    {
+     
+      var select = document.getElementById("selctUsuarios");
+      var select2 = document.getElementById("selctLlaves");
+      var selected = select2.options[select.selectedIndex].text;
+      // alert("Buscando reportes de... "+selected);
+      this.filtro.tipo='keyUsuario';
+      this.filtro.valor=selected;
+      // var inicio=this.reporDeUsuario.indexOf(' ');
+      // var clave=this.reporDeUsuario.substring(inicio+1);
+      this.$emit('mostrarReparaciones',this.filtro);
+    },
+    cerrarverReporte(){
+      this.limpiarVistas();
+      this.bolTabla=true;
+
     }
   },
   components:{
-    etqTabla:tablaReportes
+    etqTabla:tablaReportes,
+    etcMostrarCoti:mostrarCoti
   }
 
 }

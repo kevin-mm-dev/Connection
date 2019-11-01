@@ -6,8 +6,6 @@
     br
     br
     etqCotizar(v-show="bolCotizar" v-on:cotizar="mandarCotizar" v-on:cerrarCotizar="cerrarCotizar")
-      
-
     .divTabla(v-show="bolTabla")
       br
       br
@@ -23,9 +21,13 @@
                 button.button.is-success(type="submit") BUSCAR
       button.button.is-info( @click="mostrar('','')") Mostrar Reparaciones
     .select(v-show="bolTabla")
-      button.button.is-success(@click="filtrarRepor") Filtrar
       select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
-        option( v-for="us in usuarios") {{us.usuario}}          {{us.key}} 
+        option( v-for="us in usuarios") {{us.usuario}}
+    button.button.is-success(@click="filtrarRepor") Filtrar
+    .select(v-show="1<0")
+      button.button.is-success Select de usuarios
+      select(id="selctLlaves" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
+        option( v-for="us in usuarios") {{us.key}} 
     etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte")
     
     form.paginaReporte(v-show="bolReporte")
@@ -216,7 +218,6 @@ export default {
       this.bolEditar=false;
       this.bolReporte=false;
       this.bolTabla=false;
-
     },
     
     cotizarReporte(re)
@@ -237,11 +238,21 @@ export default {
     {
       // alert("Buscando reportes de... "+this.reporDeUsuario.Remove(0,));
       // debugger;
-      var inicio=this.reporDeUsuario.indexOf(' ');
-      var clave=this.reporDeUsuario.substring(inicio+1);
-      // alert("Buscando reportes de... "+clave);
+      // var mensaje;
+      // var opcion = confirm("Clicka en Aceptar o Cancelar");
+      // if (opcion == true) {
+      //   // mensaje = "Has clickado OK";
+      // } else {
+      //   // mensaje = "Has clickado Cancelar";
+      // }
+      var select = document.getElementById("selctUsuarios");
+      var select2 = document.getElementById("selctLlaves");
+      var selected = select2.options[select.selectedIndex].text;
+      // alert("Buscando reportes de... "+selected);
       this.filtro.tipo='keyUsuario';
-      this.filtro.valor=clave;
+      this.filtro.valor=selected;
+      // var inicio=this.reporDeUsuario.indexOf(' ');
+      // var clave=this.reporDeUsuario.substring(inicio+1);
       this.$emit('mostrarReparaciones',this.filtro);
     },
     cerrarCotizar()

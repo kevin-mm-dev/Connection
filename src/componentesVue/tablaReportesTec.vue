@@ -40,7 +40,7 @@
 						<i class="far fa-edit"></i>
 					</span>
 				</a>
-				<a v-if="re.cotizado==1" class="button is-success">
+				<a v-if="re.cotizado==(1)" class="button is-success">
 					<span class="icon is-small">
 						<i class="far fa-laugh-beam"></i>
 					</span>

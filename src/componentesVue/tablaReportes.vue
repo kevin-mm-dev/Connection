@@ -38,15 +38,25 @@
 						<i class="fas fa-frown"></i>
 					</span>	
 				</a>
-				<a v-else style="margin-left:3rem;" class="button is-success">
+				<a v-else style="margin-left:3rem;" class="button is-success" @click="mostrarCoti(re)">
 					<span class="icon is-small">
 						<i class="far fa-laugh-beam"></i>
 					</span>
 				</a>
             </th>
             <th class="tablaOpciones">
-                <p class="buttons"><a class="button is-info" @click="editarReporte(re)"><span class="icon is-small"><i class="far fa-edit"></i></span></a>
-				<a class="button is-danger"><span class="icon is-small"><i class="fas fa-trash-alt"></i></span></a></p>
+                <p class="buttons">
+					<a v-if="usuarioKey==re.usuario" class="button is-info" @click="editarReporte(re)">
+						<span class="icon is-small">
+							<i class="far fa-edit"></i>
+						</span>
+					</a>
+				<a v-if="usuarioKey==re.usuario" class="button is-danger">
+					<span class="icon is-small">
+						<i class="fas fa-trash-alt"></i>
+					</span>
+				</a>
+				</p>
             </th>
 			
         </tr>
@@ -132,7 +142,7 @@
 <script>
 export default {
   name: "VueScrollingTable",
-   props:['listaReportes'],
+   props:['listaReportes','usuarioKey'],
 	// props: {
 	// 	listaReportes:[],
 	// 	deadAreaColor: { type: String, required: false, default: "#CCC" },
@@ -212,6 +222,11 @@ export default {
 		editarReporte(re)
 		{
 			this.$emit("tablaEditar", re)
+		},
+		mostrarCoti(re)
+		{
+			// debugger
+			this.$emit("mostrarCoti", re)
 		}
 	},
 }

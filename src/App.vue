@@ -26,7 +26,7 @@
     etqbarraAdmin(v-if="bolBarraAdmin" v-bind:tipoUs="usuarioTipo" v-on:cambiando="cambiarEtiqueta")
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
-    etqReparacion(v-if="bolReparaciones"  v-bind:repar="reportes" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones")
+    etqReparacion(v-if="bolReparaciones" v-bind:usuarioKey="usuarioKey" v-bind:coti="coti" v-bind:usuarios="usuarios" v-bind:repar="reportes" v-on:ensenarUsuarios="metAppMostrarUsuarios" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:mostrarCoti="metAppMostrarCoti")
     etqReparacionTec(v-if="bolReparacionesTec" v-bind:repar="reportes" v-bind:usuarios="usuarios"  v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:ensenarUsuarios="metAppMostrarUsuarios" v-on:coti="metAppCotizar")
     //- etqReparacion(v-if="bolReparaciones")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
@@ -77,6 +77,7 @@ export default {
       tituloH:'Hola titulo',
       usuarios:[],
       reportes:[],
+      coti:[],
       mensaje: 'Que pasa mi amigo',
       vacio:"",
       usuarioKey:'',
@@ -126,7 +127,6 @@ export default {
           break;
         case 'reparaciones':
           this.limpiarEtiquetas();
-          // debugger;
           if(this.usuarioTipo=='Técnico')
           {
             this.bolReparacionesTec=true;
@@ -247,9 +247,22 @@ export default {
     },
     metAppMostrarReparaciones(filtro){
       const SELF =this;
-      // debugger;
+      if(filtro.tipo=='keyUsuario')
+      {
+        if(filtro.valor=='')
+        {
+          filtro.valor=this.usuarioKey;
+        }
+      }
       fire.mostrarReparaciones(filtro,function(params) {
           SELF.reportes=params;
+      });
+    },
+    metAppMostrarCoti(repoKey)
+    {
+      const SELF= this;
+      fire.mostrarCoti(repoKey,function(params) {
+        SELF.coti=params;
       });
     },
     metAppEnsenarUsuarios(usuariosConReportes){
@@ -330,7 +343,6 @@ export default {
     metAppCotizar(coti)
     {
       const SELF= this;
-      // debugger;
       /// Avisar usuario que fue cotizado
       /// Avisar sucursal que fue cotizado 
 
@@ -357,6 +369,17 @@ export default {
             }
       });
       // alert(`Hola ${coti.obser} que key ${coti.repKey}`);
+    },
+    mostrarCoti(repoKey)
+    {
+       const SELF= this;
+      /// Avisar usuario que fue cotizado
+      /// Avisar sucursal que fue cotizado 
+      fire.mostrarCoti(repoKey,function(params) {
+        SELF.coti=params;
+      });
+
+
     },
     msgGuardado(msg){
       toastr.success('Guardado exitosamente!! '+msg);
