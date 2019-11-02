@@ -23,7 +23,7 @@
     .select(v-show="bolTabla")
       select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
         option( v-for="us in usuarios") {{us.usuario}}
-    button.button.is-success(@click="filtrarRepor") Filtrar
+    button.button.is-success(v-show="bolTabla" @click="filtrarRepor") Filtrar
     .select(v-show="1<0")
       button.button.is-success Select de usuarios
       select(id="selctLlaves" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
