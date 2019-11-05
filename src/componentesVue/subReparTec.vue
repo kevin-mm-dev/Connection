@@ -28,7 +28,7 @@
       button.button.is-success Select de usuarios
       select(id="selctLlaves" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
         option( v-for="us in usuarios") {{us.key}} 
-    etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte")
+    etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte" v-on:marcarReparado="marcarReparado")
     
     form.paginaReporte(v-show="bolReporte")
       a.button.is-rounded.btnMostrarUsu(@click="cerrarverReporte")
@@ -141,7 +141,6 @@ export default {
     
     mostrar(tipo,valor) {
       // alert('enviando...!')
-      // debugger;
       this.filtro.tipo=tipo;
       this.filtro.valor=valor;
 
@@ -150,13 +149,11 @@ export default {
       // this.listaReportes=new Object();
       // this.listaReportes=this.repar;
       // setTimeout(heredarReportes(),3000);
-      
       // this.limpiarReporte();
     },
     
     filtrar()
     {
-      // debugger;
       let reportesFiltrados=[];
       for(var repo in this.listaReportes)
       {
@@ -204,10 +201,18 @@ export default {
     },
     mandarCotizar(coti)
     {
-      // debugger;
       coti.repoKey=this.reportes['key'];
       this.limpiarComps();
       this.$emit('coti',coti);
+      this.limpiarReporte();
+      this.bolTabla=true;
+      this.mostrar('','');
+    },
+    marcarReparado(re,ind)
+    {
+      var key=re['key'];
+      this.limpiarComps();
+      this.$emit('marcarReparado',key,ind);
       this.limpiarReporte();
       this.bolTabla=true;
       this.mostrar('','');
@@ -222,7 +227,6 @@ export default {
     
     cotizarReporte(re)
     {
-      debugger
       if(re!=undefined)
       {
         this.reportes=re;
@@ -237,7 +241,6 @@ export default {
     filtrarRepor()
     {
       // alert("Buscando reportes de... "+this.reporDeUsuario.Remove(0,));
-      // debugger;
       // var mensaje;
       // var opcion = confirm("Clicka en Aceptar o Cancelar");
       // if (opcion == true) {

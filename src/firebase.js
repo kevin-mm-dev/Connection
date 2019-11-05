@@ -60,6 +60,14 @@ export default new Vue({
                 callback(error);
             });
         },
+        marcarReparadoReporte(keyRepo, ind, callback) {
+            // debugger;
+            reportesRef.child(keyRepo).update({
+                reparado: ind,
+            }, function(error) {
+                callback(error);
+            });
+        },
         agregarCoti(coti, callback) {
             cotiRef.push(coti, function(error) {
                 callback(error);
@@ -134,19 +142,17 @@ export default new Vue({
         },
         mostrarReparaciones(filtro, callback) {
             var reportes = [];
-            // debugger;
+
             var consultar = true;
-
-
             reportesRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
                 if (consultar) {
                     consultar = false;
                     for (var propiedad in objeto) {
-                        // debugger;
+
                         switch (filtro.tipo) {
-                            case 'fecha':
-                                if (filtro.valor == objeto[propiedad].fecha && objeto[propiedad].reparado == 0) {
+                            case 'fecha': /// && objeto[propiedad].reparado == 0
+                                if (filtro.valor == objeto[propiedad].fecha) {
                                     reportes.unshift({
                                         'key': propiedad,
                                         nombreCliente: objeto[propiedad].nombreCliente,
@@ -166,7 +172,7 @@ export default new Vue({
                                 }
                                 break;
                             case 'nombreCliente':
-                                if (filtro.valor == objeto[propiedad].nombreCliente && objeto[propiedad].reparado == 0) {
+                                if (filtro.valor == objeto[propiedad].nombreCliente) {
                                     reportes.unshift({
                                         'key': propiedad,
                                         nombreCliente: objeto[propiedad].nombreCliente,
@@ -186,7 +192,7 @@ export default new Vue({
                                 }
                                 break;
                             case 'keyUsuario':
-                                if (filtro.valor == objeto[propiedad].usuario && objeto[propiedad].reparado == 0) {
+                                if (filtro.valor == objeto[propiedad].usuario) {
                                     reportes.unshift({
                                         'key': propiedad,
                                         nombreCliente: objeto[propiedad].nombreCliente,
@@ -206,7 +212,7 @@ export default new Vue({
                                 }
                                 break;
                             case 'reparado':
-                                if (filtro.valor == objeto[propiedad].reparado && objeto[propiedad].reparado == 0) {
+                                if (filtro.valor == objeto[propiedad].reparado) {
                                     reportes.unshift({
                                         'key': propiedad,
                                         nombreCliente: objeto[propiedad].nombreCliente,
@@ -277,12 +283,11 @@ export default new Vue({
                                 usuarioInicio.tipo = objeto[propiedad].tipo;
 
                             }
-                            // debugger;
+
                             // if (objeto.length == tamañoArreglo) {
                             //     callback(usuarioKey);
                             // }
                         }
-                        // debugger;
                         if (usuarioKey === '') {
                             // alert("Salio for pero key esta vacio");
                             usuarioNoExiste();

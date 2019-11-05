@@ -27,7 +27,7 @@
     etqLogin(v-if="bolLogin" v-on:iniciandoSesion="metAppIniciarSesion")
     etqFormulario(v-if="bolForm" v-on:agregando="metAppAgregarReporte")
     etqReparacion(v-if="bolReparaciones" v-bind:usuarioKey="usuarioKey" v-bind:coti="coti" v-bind:usuarios="usuarios" v-bind:repar="reportes" v-on:ensenarUsuarios="metAppMostrarUsuarios" v-on:actualizarReparaciones="metAppActualizarReparaciones" v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:mostrarCoti="metAppMostrarCoti")
-    etqReparacionTec(v-if="bolReparacionesTec" v-bind:repar="reportes" v-bind:usuarios="usuarios"  v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:ensenarUsuarios="metAppMostrarUsuarios" v-on:coti="metAppCotizar")
+    etqReparacionTec(v-if="bolReparacionesTec" v-bind:repar="reportes" v-bind:usuarios="usuarios"  v-on:mostrarReparaciones="metAppMostrarReparaciones" v-on:ensenarUsuarios="metAppMostrarUsuarios" v-on:coti="metAppCotizar" v-on:marcarReparado="metAppMarcarReparado")
     //- etqReparacion(v-if="bolReparaciones")
     etqRegistroUsuario(v-if="bolRegistrarUsuario" v-bind:usuariosReg="usuarios" v-on:agregando="metAppAgregarUsuario"
     v-on:mostrarUsuarios="metAppMostrarUsuarios" v-on:actualizarUsuarios="metAppActualizarUsuarios" v-on:borrarUsuarios="metAppBorrarUsuarios")
@@ -45,6 +45,7 @@ import barraAdmin from './componentesVue/barraAdmin.vue'
 import subAgregar from './componentesVue/subAgregar.vue'
 import subReparTec from './componentesVue/subReparTec.vue'
 import subRepar from './componentesVue/subRepar.vue'
+// import reporteJs from './reporte.js'
 import registroUsuario from './componentesVue/registroUsuario.vue'
 import login from './componentesVue/login.vue'
 
@@ -123,7 +124,6 @@ export default {
         case 'inicio':
           this.limpiarEtiquetas();
           this.bolForm=true;
-
           break;
         case 'reparaciones':
           this.limpiarEtiquetas();
@@ -135,12 +135,10 @@ export default {
             this.bolReparaciones=true;
 
           }
-
           break;
         case 'reportes':
           this.limpiarEtiquetas();
           this.bolReportes=true;
-
           break;
         case 'usuarios':
           this.limpiarEtiquetas();
@@ -170,13 +168,15 @@ export default {
       this.bolBarraAdmin=true;
     },
     cerrarSesion(){
+
       /// https://parall.ax/products/jspdf (Probar)
       /// https://rawgit.com/MrRio/jsPDF/master/docs/index.html  (Mas docu)
-      // var doc = new jsPDF();
-      //                Espacio Izq, espacio Top
-      // doc.text(this.usuarioTipo, 50, 10);
-      // doc.text(this.mensaje, 10, 10);
-      // doc.save('Exito.pdf');
+      // // var doc = new jsPDF();
+      // //               //  Espacio Izq, espacio Top
+      // // // doc.text(this.usuarioTipo, 50, 10);
+      // // // doc.text(this.mensaje, 10, 10);
+      // // doc.save('Exito.pdf');
+      
       const SELF = this;
       fire.cerrarSesion().then(function() {
         SELF.limpiarEtiquetas();
@@ -280,6 +280,24 @@ export default {
         }
       })
     },
+    metAppMarcarReparado(key,ind)
+    {
+      const SELF=this;
+      fire.marcarReparadoReporte(key,ind,function(error){
+              if (error) {
+                  SELF.msgError();
+                }
+                else {
+                  SELF.msgGuardado();
+                  var filtro=new Object();
+                  filtro.tipo='';
+                  filtro.valor='';
+                  fire.mostrarReparaciones(filtro,function(params) {
+                  SELF.reportes=params;
+                });
+              }
+            });
+    },
     // validarUsuario:function (usu) {
     //   if (usu.usuario==='' && usu.contrasena==='' ) {
     //     this.msgError("El usuario no debe ser campo vacío");
@@ -366,7 +384,7 @@ export default {
                 });
               }
             })
-            }
+        }
       });
       // alert(`Hola ${coti.obser} que key ${coti.repKey}`);
     },
@@ -388,6 +406,10 @@ export default {
     {
       toastr.error(`Hubo un error al intentar la operación --
         ${msg}` );
+    },
+    formatoReporte(re,costo)
+    {
+
     },
   },
   components:{

@@ -18,6 +18,7 @@
         <th style="width:1rem;">Fecha</th>
         <th>Revisar</th>
         <th>Cotizare</th>
+        <th>Reparado</th>
         </tr> 
         </thead>
 		<tbody class="propiedadesTabla" name="tbody" ref="tbody"
@@ -46,9 +47,19 @@
 					</span>
 				</a>
             </th>
-			
+			<th class="tablaOpciones">
+				<a  v-if="re.reparado==(0)" @click="marcarReparado(re,1)" class="button is-danger">
+					<span class="icon is-small">
+						<i class="fas fa-frown"></i>
+					</span>
+				</a>
+				<a v-else @click="marcarReparado(re,0)" class="button is-success">
+					<span class="icon is-small">
+						<i class="far fa-laugh-beam"></i>
+					</span>
+				</a>
+            </th>
         </tr>
-		
       </tbody>
 		<tfoot name="tfoot" ref="tfoot"
 			v-if="includeFooter"
@@ -144,6 +155,11 @@ export default {
 		verReporte(re)
 		{
 			this.$emit("verReporte", re)
+		},
+		marcarReparado(re,ind)
+		{
+			this.$emit("marcarReparado", re,ind)
+
 		}
 	},
 }
