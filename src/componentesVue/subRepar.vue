@@ -3,7 +3,8 @@
     .fondoTitulo
     h1.txtTitulo Reparaciones
     hr.txtTitulo
-    
+    br
+    br
     .divTabla(v-show="bolTabla")
       br
       br
@@ -17,7 +18,7 @@
             .field
               .control
                 button.button.is-success(type="submit") BUSCAR
-      button.button.is-info( @click="mostrar('','')") Mostrar Reparaciones
+      button.button.is-info( @click="mostrar('','')") Mis Reparaciones
     .select(v-show="bolTabla")
       select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
         option( v-for="us in usuarios") {{us.usuario}}
@@ -25,7 +26,7 @@
     .select(v-show="1<0")
       select(id="selctLlaves" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
         option( v-for="us in usuarios") {{us.key}} 
-    etqTabla(v-show="bolTabla" v-bind:usuarioKey="usuarioKey" v-bind:listaReportes="repar"  v-on:tablaEditar="editarReporte" v-on:mostrarCoti="mostrarCoti")
+    etqTabla(v-show="bolTabla" v-bind:usuarioKey="usuarioKey" v-bind:listaReportes="repar"  v-on:tablaEditar="editarReporte" v-on:mostrarCoti="mostrarCoti" v-on:imprimirReporte="imprimirReporte" v-on:eliminarReporte="eliminarReporte")
     form.paginaReporte(v-if="bolEditar")
       a.button.is-rounded.btnMostrarUsu(@click="cerrarverReporte")
           span.icon.is-small
@@ -61,7 +62,7 @@
             .column.is-half
               .field
                 .control
-                  label.label IMEI o (SIM) :
+                  label.label IMEI o (S/N) :
                     input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
                   label.label Marca :
@@ -73,7 +74,7 @@
                     textarea.textarea.is-warning(v-model="reportes.acces" name="accesorios" placeholder="...")
           .field
             .control
-              label.label Modelo :
+              label.label Modelo y Color:
                 input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="")
               label.label Condiciones del Equipo :
                 textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="")
@@ -82,7 +83,7 @@
     
       br
       .btnAceptar
-        a.button.is-success.btnCien.btnAceptar()  
+        a.button.is-success.btnCien.btnAceptar(@click="actualizarReparaciones")  
           span.icon.is-small
             i.fas.fa-check
           span Guardar   
@@ -106,7 +107,7 @@
         section.modal-card-body
           .content(v-for="cot in coti")
             h1 Observaciones
-            textarea.textarea(v-model="cot.obser" disabled)
+            textarea.textarea(v-model="cot.obser" id="obsCoti" disabled)
             .field
               .control
             label Precio:
@@ -118,6 +119,27 @@
         footer.modal-card-foot
           //- button.button.is-success(@click="mandarReparar") Reparar
           button.button.is-success(@click="cerrarModal") Okey
+    #modalImprimir.modal.is-close
+      .modal-background
+      .modal-card
+        header.modal-card-head
+          h1.modal-card-title Preparado para Imprimir Reporte
+          button.delete(@click="cerrarModalImp" aria-label='close')
+        section.modal-card-body
+          .content(v-for="cot in coti")
+            h4 Fecha Impresión:
+            .control.columns
+              .column.is-half
+                input.input.date(v-model="cot.fecha" type="date" id="fechaCoti" min="2018-03-25" max="2030-12-25")
+            .control
+              h4 Precio:
+              .field
+                label
+                  |     Cotizacion
+                  input.input(v-model="cot.precio" type="number" id="valorCoti" ) 
+                  
+        footer.modal-card-foot
+          button.button.is-success(id="btnDescargar" @click="descargarReporte") Descargar PDF
 
 </template>
 
@@ -134,6 +156,8 @@ export default {
       filtro :new Object(),
       campoCompleto:'',
       reporDeUsuario:'',
+      precio:'',
+      fecha:'',
       listaReportes:[],
       bolEditar:false,
       bolTabla:true,
@@ -155,9 +179,8 @@ export default {
   methods:{
     
     mostrar(tipo,valor) {
-      // alert('enviando...!')
       
-      this.filtro.tipo='keyUsuario';
+      this.filtro.tipo=tipo;
       this.filtro.valor=valor;
 
       this.$emit('mostrarReparaciones',this.filtro);
@@ -191,7 +214,6 @@ export default {
         fallas:'',
         cond:'',
         acces:'',
-        
         }
     },
     editarReporte(re)
@@ -199,7 +221,6 @@ export default {
       var fec=this.fechaHoy();
       this.limpiarVistas();
       this.bolEditar=true;
-      // alert(`Hoy es ${fec}`);
       this.reportes=re;
     },
     limpiarVistas()
@@ -212,9 +233,8 @@ export default {
         var dd = hoy.getDate();
         var mm = hoy.getMonth()+1;
         var yyyy = hoy.getFullYear();
-        
+        return yyyy+'-'+mm+'-'+dd;
 
-        return dd+'/'+mm+'/'+yyyy;
     },
     mostrarCoti(re)
     {
@@ -233,6 +253,18 @@ export default {
       modal.classList.remove('is-active');
       modal.classList.add('is-close');
       
+    },
+    abrirModalImp(){
+      var modal= document.getElementById("modalImprimir");
+      modal.classList.remove('is-close');
+      modal.classList.add('is-active');
+    },
+    cerrarModalImp(){
+      console.log("Nada por?");
+      var modal= document.getElementById("modalImprimir");
+      modal.classList.remove('is-active');
+      modal.classList.add('is-close');
+      
     },filtrarRepor()
     {
      
@@ -247,9 +279,38 @@ export default {
       this.$emit('mostrarReparaciones',this.filtro);
     },
     cerrarverReporte(){
+      this.mostrar('','');
       this.limpiarVistas();
       this.bolTabla=true;
 
+    },
+    descargarReporte()
+    {
+      this.fecha=document.getElementById("fechaCoti").value;
+      this.precio=document.getElementById("valorCoti").value;
+      var obser=document.getElementById("obsCoti").value;
+      this.$emit('descargarPdf',this.fecha,this.precio,obser,this.reportes,this.fechaHoy());
+      this.cerrarModalImp();
+    },
+    actualizarReparaciones()
+    {
+      this.$emit('actualizarReparaciones',this.reportes);
+      this.cerrarverReporte();
+    },
+    imprimirReporte(re)
+    { 
+      this.reportes=re;
+      this.$emit('mostrarCoti',re.key);
+      this.abrirModalImp()
+    },
+    pasarCantidad()
+    {
+      var cos= document.getElementById("valorCoti");
+      this.precio=cos.value;
+    },
+    eliminarReporte(re)
+    {
+      this.$emit('eliminarReporte',re.key);
     }
   },
   components:{
@@ -303,5 +364,13 @@ html{
     font-size: 1.5rem;
     color: #363636;
     
+}
+
+#btnDescargar
+{
+  width: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
 }
 </style>

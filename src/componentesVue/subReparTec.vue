@@ -11,14 +11,14 @@
       br
       br
       form.columns(@submit.prevent="mostrar('nombreCliente',clienteBuscar)")
-          .column.is-three-quarters.divBarraBuscar
-            .field
-              .control
-                input.input.is-primary.txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
-          .column
-            .field
-              .control
-                button.button.is-success(type="submit") BUSCAR
+        .column.is-three-quarters.divBarraBuscar
+          .field
+            .control
+              input.input.is-primary#txtBuscar(v-model="clienteBuscar" placeholder="Cliente")
+        .column
+          .field
+            .control
+              button.button.is-success(type="submit") BUSCAR
       button.button.is-info( @click="mostrar('','')") Mostrar Reparaciones
     .select(v-show="bolTabla")
       select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
@@ -28,7 +28,7 @@
       button.button.is-success Select de usuarios
       select(id="selctLlaves" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
         option( v-for="us in usuarios") {{us.key}} 
-    etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte" v-on:marcarReparado="marcarReparado")
+    etqTabla(v-show="bolTabla" v-bind:listaReportes="repar" v-on:verReporte="verReporte" v-on:cotizarReporte="cotizarReporte" v-on:marcarReparado="marcarReparado" v-on:mostrarCoti="mostrarCoti")
     
     form.paginaReporte(v-show="bolReporte")
       a.button.is-rounded.btnMostrarUsu(@click="cerrarverReporte")
@@ -66,7 +66,7 @@
               .column.is-half
                 .field
                   .control
-                    label.label IMEI o (SIM) :
+                    label.label IMEI o (S/N) :
                       input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" disabled="true")
                       p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
                     label.label Marca :
@@ -78,7 +78,7 @@
                       textarea.textarea(v-model="reportes.acces" name="accesorios" placeholder="..." disabled="true")
             .field
               .control
-                label.label Modelo :
+                label.label Modelo y Color:
                   input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="" disabled="true")
                 label.label Condiciones del Equipo :
                   textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="" disabled="true")
@@ -102,6 +102,27 @@
     .pound                
     img.imgFooter(src="../assets/celular.png")
     footer.footer
+    #modalMostrarCotizar.modal.is-close
+      .modal-background
+      .modal-card
+        header.modal-card-head
+          p.modal-card-title Cotización
+          button.delete(@click="cerrarModal" aria-label='close')
+        section.modal-card-body
+          .content(v-for="cot in coti")
+            h1 Observaciones
+            textarea.textarea(v-model="cot.obser" disabled)
+            .field
+              .control
+            label Precio:
+            input.input(v-model="cot.precio" disabled) 
+            .field
+              .control
+            label Fecha Termina:
+            input.input(v-model="cot.fecha" disabled) 
+        footer.modal-card-foot
+          //- button.button.is-success(@click="mandarReparar") Reparar
+          button.button.is-success(@click="cerrarModal") Okey
 </template>
 
 <script>
@@ -110,7 +131,7 @@ import compCotizar from './cotizar.vue'
 
 export default {
   name: 'subRepar',
-  props:['repar','usuarios'],
+  props:['repar','usuarios','coti'],
   data (){
     return {
       clienteBuscar:'',
@@ -195,8 +216,6 @@ export default {
         var dd = hoy.getDate();
         var mm = hoy.getMonth()+1;
         var yyyy = hoy.getFullYear();
-        
-
         return dd+'/'+mm+'/'+yyyy;
     },
     mandarCotizar(coti)
@@ -207,6 +226,11 @@ export default {
       this.limpiarReporte();
       this.bolTabla=true;
       this.mostrar('','');
+    },
+    mostrarCoti(re)
+    {
+      this.$emit('mostrarCoti',re.key);
+      this.abrirModal();
     },
     marcarReparado(re,ind)
     {
@@ -224,7 +248,6 @@ export default {
       this.bolReporte=false;
       this.bolTabla=false;
     },
-    
     cotizarReporte(re)
     {
       if(re!=undefined)
@@ -264,6 +287,18 @@ export default {
       this.limpiarComps();
       this.bolTabla=true;
 
+    },
+    abrirModal(){
+      var modal= document.getElementById("modalMostrarCotizar");
+      modal.classList.remove('is-close');
+      modal.classList.add('is-active');
+    },
+    cerrarModal(){
+      console.log("Nada por?");
+      var modal= document.getElementById("modalMostrarCotizar");
+      modal.classList.remove('is-active');
+      modal.classList.add('is-close');
+      
     }
   },
   components:{
@@ -306,10 +341,12 @@ html{
   width: 85px;
   
 }
-.txtBuscar {
+#txtBuscar{
     display: flex;
+    // height: 30px;
     width: 57vw;
     margin-left: 14.5rem;
+    
 }
 
 .table thead th {

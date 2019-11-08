@@ -3,10 +3,10 @@
     nav#menuAdmin 
       ul
         li 
-          a.button.is-rounded#btnInicio(@click="metodInicio(),enCambio('inicio')" style="boxShadow:5px 5px 6px black;") 
+          a.button.is-rounded#btnInicio(v-show="tipoUs!='Técnico'" @click="metodInicio(),enCambio('inicio')" style="boxShadow:5px 5px 6px black;") 
             span.icon.is-small
               i.fas.fa-home
-            span Inicio
+            span Servicio
         li  
           .reparaciones
             a.button.is-rounded#btnReparaciones(@click="metodReparaciones(),enCambio('reparaciones')") 
@@ -14,16 +14,16 @@
                 i.fas.fa-briefcase
               span Reparaciones
         li
-          .reportes
-            a.button.is-rounded#btnReportes(@click="metodReportes(),enCambio('reportes')") 
-              span.icon.is-small
-                  i.fas.fa-book-open
-              span Reportes
-        li
           a.button.is-rounded#btnUsarios(v-show="tipoUs=='Técnico'" @click="metodUsuarios(),enCambio('usuarios')") 
             span.icon.is-small
               i.fas.fa-users
             span Usuarios
+        //- li
+        //-   .reportes
+        //-     a.button.is-rounded#btnReportes(@click="metodReportes(),enCambio('reportes')") 
+        //-       span.icon.is-small
+        //-           i.fas.fa-book-open
+        //-       span Reportes
     hr
 
 </template>
@@ -55,12 +55,12 @@ export default {
     },
     quitarSombras(ev){
       var btnInicio = document.getElementById("btnInicio");
-      var btnReportes = document.getElementById("btnReportes");
+      // var btnReportes = document.getElementById("btnReportes");
       var btnReparaciones = document.getElementById("btnReparaciones");
       var btnUsarios = document.getElementById("btnUsarios");
       btnReparaciones.style.boxShadow="";
       btnInicio.style.boxShadow="";
-      btnReportes.style.boxShadow="";
+      // btnReportes.style.boxShadow="";
       btnUsarios.style.boxShadow="";
       var subModulo = document.getElementById(ev);
       subModulo.style.boxShadow="5px 5px 6px black";
@@ -70,11 +70,8 @@ export default {
     },
     metodReparaciones(){
       this.quitarSombras("btnReparaciones");
-      // alert(`Tu eres tipo ${this.tipoUs}`);
       },
-    metodReportes(){
-      this.quitarSombras("btnReportes");
-      },
+      
     metodUsuarios(){
       this.quitarSombras("btnUsarios");
     }

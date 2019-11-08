@@ -23,9 +23,6 @@
         </thead>
 		<tbody class="propiedadesTabla" name="tbody" ref="tbody"
 			@scroll.passive="updateSyncedScroll"><slot name="tbody"/>
-       
-	   
-
 	  <tr v-for="re in listaReportes" v-bind:key="re.key">
             <th>{{re.nombreCliente}}</th>
             <!-- <th>{{re.celularCliente}}</th> -->
@@ -41,7 +38,7 @@
 						<i class="far fa-edit"></i>
 					</span>
 				</a>
-				<a v-if="re.cotizado==(1)" class="button is-success">
+				<a v-if="re.cotizado==(1)" class="button is-success" @click="mostrarCoti(re)">
 					<span class="icon is-small">
 						<i class="far fa-laugh-beam"></i>
 					</span>
@@ -158,8 +155,18 @@ export default {
 		},
 		marcarReparado(re,ind)
 		{
-			this.$emit("marcarReparado", re,ind)
+			if(re.cotizado==0)
+			{
+				alert("Asegurate de haber cotizado antes de marcar como reparado");
+			}else{
+				this.$emit("marcarReparado", re,ind)
+			}
 
+		},
+		mostrarCoti(re)
+		{
+			
+			this.$emit("mostrarCoti", re)
 		}
 	},
 }

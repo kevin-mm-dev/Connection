@@ -18,17 +18,18 @@
               .control
                 label.label Observaciónes :
                   textarea.textarea(v-model="coti.obser" name="text" type="text" placeholder="" )
-                  p.help.is-danger(v-if="campoIncompletoUs") Este campo es obligatorio
+                  p.help.is-danger(v-if="campoIncompletoObs") Este campo es obligatorio
           .column
             .field
               .control
                 label.label Precio :
                   input.input(v-model="coti.precio" name="text" type="number" placeholder="" )
+                  p.help.is-danger(v-if="campoIncompletoPrecio") Este campo es obligatorio
             .field
               .control
                 label.label Fecha Entrega :  
                   input.input.date(v-model="coti.fecha" type="date" name="fecha" min="2018-03-25" max="2030-12-25")
-                  p.help.is-danger(v-if="campoIncompletoUs") Este campo es obligatorio
+                  p.help.is-danger(v-if="campoIncompletoFecha") Este campo es obligatorio
                   
       br
       .btnAceptar
@@ -36,27 +37,14 @@
           span.icon.is-small
             i.fas.fa-check
           span Añadir 
-    //- br                
-    //- br                
-    //- br                
-    
-                
-    //- br
-    //- br                
-    //- br
-    //- br
-    //- br                
-    //- img.imgFooter(src="../assets/celular.png")
-    //- footer.footer
-    //-   .content.has-text-centered
-    //-     p
+          
     
 
     
 </template>
 
 <script>
-// import './assets/scss/main.scss'
+
 
 
 export default {
@@ -71,9 +59,9 @@ export default {
       registrar:true,
       bolMostrar:true,
       bolRegistrar:false,
-      campoIncompletoUs:false,
-      campoIncompletoCont1:false,
-      campoIncompletoCont2:false,
+      campoIncompletoObs:false,
+      campoIncompletoPrecio:false,
+      campoIncompletoFecha:false,
       confContrasena:'',
       usuarioEdit:{
         actKey:'',
@@ -130,22 +118,22 @@ export default {
       }
     },
     camposVacios(us,cont1,cont2){
-      if(us==='')
+      if(us==='' || us==undefined)
       {
-        this.campoIncompletoUs=true;
+        this.campoIncompletoObs=true;
       }else{
-        this.campoIncompletoUs=false;
-        if(cont1==='')
+        this.campoIncompletoObs=false;
+        if(cont1==='' || cont1==undefined)
           {
-            this.campoIncompletoCont1=true;
+            this.campoIncompletoPrecio=true;
           }else{
-            this.campoIncompletoCont1=false;
-            if(cont2==='')
+            this.campoIncompletoPrecio=false;
+            if(cont2==='' || cont2==undefined)
               { 
-                this.campoIncompletoCont2=true;
+                this.campoIncompletoFecha=true;
                 return false;
                 }else{
-                this.campoIncompletoCont2=false;
+                this.campoIncompletoFecha=false;
                 return true;
               }
             }
@@ -156,22 +144,17 @@ export default {
       this.$emit('mostrarUsuarios');
     },
     enviarCoti(){
-      // var fec=new Date('yyyy-mm-dd');
-      // alert(`Hoy es ${fec}`);
+      
+      
+      if(this.camposVacios(this.coti.obser,this.coti.precio,this.coti.fecha))
+        {
+          
+          this.$emit('cotizar',this.coti);
+          this.coti=new Object();
+        }
 
-      this.$emit('cotizar',this.coti);
 
-      // var usuarioEditado=this.usuarioEdit;
-      // console.log(`Quieres actualizar a ${usuarioEditado.usuario}`);  
-      // console.log(`Key: ${usuarioEditado.key}`);  
-      // this.$emit('actualizarUsuarios',this.usuarioEdit);
-      // this.$emit('mostrarUsuarios');
-      // this.cerrarModal();
-      // this.usuarioEdit={
-      //   actKey:'',
-      //   nuevoUsuario: '',
-      //   nuevaContrasena: '',
-      // }
+
     },
     abrirModal(us){
       
@@ -180,11 +163,7 @@ export default {
       this.usuarioEdit.nuevaContrasena=us.contrasena;
       this.usuarioEdit.nuevoTipo=us.tipo;
       var modal= document.getElementById("modalEditar");
-      // if (modal.classList.contains('modal')) {
-      //   alert("Aqui estoy");
-      // }else{
-      //   alert("nel");
-      // }
+      
       modal.classList.remove('is-close');
       modal.classList.add('is-active');
     },

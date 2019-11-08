@@ -61,7 +61,7 @@ export default new Vue({
             });
         },
         marcarReparadoReporte(keyRepo, ind, callback) {
-            // debugger;
+
             reportesRef.child(keyRepo).update({
                 reparado: ind,
             }, function(error) {
@@ -100,6 +100,10 @@ export default new Vue({
             }, function(error) {
                 callback(error);
             });
+        },
+        eliminarReporte(repoKey, callback) {
+
+            db.ref('reportes/' + repoKey).remove(callback());
         },
         mostrarUsuarios(usuarios, callback) {
             var usuarios = [];
@@ -141,15 +145,14 @@ export default new Vue({
             });
         },
         mostrarReparaciones(filtro, callback) {
-            var reportes = [];
-
             var consultar = true;
             reportesRef.on("value", function(snapshot) {
                 var objeto = snapshot.val();
                 if (consultar) {
-                    consultar = false;
-                    for (var propiedad in objeto) {
+                    // consultar = false;
 
+                    var reportes = [];
+                    for (var propiedad in objeto) {
                         switch (filtro.tipo) {
                             case 'fecha': /// && objeto[propiedad].reparado == 0
                                 if (filtro.valor == objeto[propiedad].fecha) {
@@ -172,7 +175,7 @@ export default new Vue({
                                 }
                                 break;
                             case 'nombreCliente':
-                                if (filtro.valor == objeto[propiedad].nombreCliente) {
+                                if (objeto[propiedad].nombreCliente.includes(filtro.valor)) {
                                     reportes.unshift({
                                         'key': propiedad,
                                         nombreCliente: objeto[propiedad].nombreCliente,
@@ -257,9 +260,21 @@ export default new Vue({
             });
         },
         actualizarReparaciones(reparacionActualizado, callback) {
-            reportesRef.child(reparacionActualizado.Key).update({
+            reportesRef.child(reparacionActualizado.key).update({
                 nombreCliente: reparacionActualizado.nombreCliente,
-                celularCliente: reparacionActualizado.celularCliente
+                celularCliente: reparacionActualizado.celularCliente,
+                fallas: reparacionActualizado.fallas,
+                acces: reparacionActualizado.acces,
+                chip: reparacionActualizado.chip,
+                cond: reparacionActualizado.cond,
+                cotizado: reparacionActualizado.cotizado,
+                marca: reparacionActualizado.marca,
+                modelo: reparacionActualizado.modelo,
+                reparado: reparacionActualizado.reparado,
+                telefonoCliente: reparacionActualizado.telefonoCliente,
+                usuario: reparacionActualizado.usuario,
+                fecha: reparacionActualizado.fecha,
+
             }, function(error) {
                 callback(error);
             });
@@ -270,8 +285,6 @@ export default new Vue({
                 function() {
                     var usuarioInicio = [];
                     var usuarioKey = '';
-                    // alert("Vamos a leer datos");
-
                     usuariosRef.on("value", function(snapshot) {
                         var objeto = snapshot.val();
                         var tamañoArreglo = 0;

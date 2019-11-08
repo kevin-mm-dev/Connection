@@ -18,13 +18,13 @@
               .field
                 .control.control
                   label.label Celular :
-                    input.input(v-model="reportes.celularCliente" name="cel" type="tel" placeholder="" )
+                    input.input(v-model="reportes.celularCliente" name="cel" type="number" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
             .column.is-half
               .field
                 .control.control
                   label.label.telefono Telefono de Casa :
-                    input.input(v-model="reportes.telefonoCliente" name="tel" type="tel" placeholder="" )
+                    input.input(v-model="reportes.telefonoCliente" name="tel" type="number" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
           .control
             label.label Nombre :
@@ -40,7 +40,7 @@
             .column.is-half
               .field
                 .control
-                  label.label IMEI o (SIM) :
+                  label.label IMEI o (S/N) :
                     input.input(v-model="reportes.chip" name="marca" type="text" placeholder="" )
                     p.help.is-danger(v-if="campoCompleto") Este campo es obligatorio
                   label.label Marca :
@@ -52,7 +52,7 @@
                     textarea.textarea.is-warning(v-model="reportes.acces" name="accesorios" placeholder="...")
           .field
             .control
-              label.label Modelo :
+              label.label Modelo y Color:
                 input.input(v-model="reportes.modelo" name="modelo" type="text" placeholder="")
               label.label Condiciones del Equipo :
                 textarea.textarea(v-model="reportes.cond" name="condiciones" type="text" placeholder="")
@@ -72,31 +72,6 @@
     img.imgFooter(src="../assets/celular.png")
     footer.footer
       .content.has-text-centered
-        p
-          
-          //- strong Bulma
-          //- |  by 
-          //- a(href='https://jgthms.com') Jeremy Thomas
-          //- | . The source code is licensed
-          //- a(href='http://opensource.org/licenses/mit-license.php') MIT
-          //- | . The website content
-          //- |       is licensed 
-          //- a(href='http://creativecommons.org/licenses/by-nc-sa/4.0/') CC BY NC SA 4.0
-          //- | .
-
-          //- .control
-            button.button(@click="validar" type="submit") valer
-            h1
-
-
-          //- form
-          //-   label(for="celular") Celular:
-          //-   input.datosCliente(name="celular" type="text" placeholder="000-000-00-00" )
-          //-   label(for="name") Nombre:
-          //-   input.lblNombre(name="name" type="password" placeholder="")
-
-            //- .column.is-half
-            //-   h3(v-model="cel") Nombre:
 
 
 </template>
@@ -127,18 +102,29 @@ export default {
     }
   },
   methods:{
-    // validar(){
-    //   if (this.campoCompleto) {
-    //     this.campoCompleto=false
-    //   }else{
-    //     this.campoCompleto=true
-    //   }
-    // },
+    validarReporte(){
+      
+      if (this.reportes.nombreCliente=="" || this.reportes.celularCliente=="" || this.reportes.chip=="" ||
+      this.reportes.marca=="" || this.reportes.modelo=="" || this.reportes.fallas=="" || this.reportes.cond=="" 
+      || this.reportes.acces=="" ) {
+        
+        return false
+      }else{
+        return true
+        
+      }
+    },
     metSubmit() {
       // alert('enviando...!')
-      this.reportes.fecha=this.fechaHoy();
+      if(this.validarReporte())
+      {this.reportes.fecha=this.fechaHoy();
       this.$emit('agregando',this.reportes);
       this.limpiarReporte();
+
+      }else{
+        alert("Asegurate de llenar todos los campos");
+      }
+      
     },
     limpiarReporte(){
       this.reportes={
@@ -160,7 +146,7 @@ export default {
         var dd = hoy.getDate();
         var mm = hoy.getMonth()+1;
         var yyyy = hoy.getFullYear();
-        return dd+'/'+mm+'/'+yyyy;
+        return yyyy+'-'+mm+'-'+dd;
     },
     
   }

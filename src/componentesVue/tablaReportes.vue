@@ -32,7 +32,7 @@
             <th style="width:1rem;">{{re.fecha}}</th>
 			<th  class="tablaOpciones">
 				<a v-if="re.reparado==0" class="button is-danger"><span class="icon is-small"><i class="fas fa-frown"></i></span></a>
-				<a v-else class="button is-success"><span class="icon is-small"><i class="far fa-laugh-beam"></i></span></a>
+				<a v-else @click="imprimirReporte(re)" class="button is-success"><span class="icon is-small"><i class="far fa-laugh-beam"></i></span></a>
 				<a v-if="re.cotizado==0" style="margin-left:3rem;" class="button is-danger">
 					<span class="icon is-small">
 						<i class="fas fa-frown"></i>
@@ -51,7 +51,7 @@
 							<i class="far fa-edit"></i>
 						</span>
 					</a>
-				<a v-if="usuarioKey==re.usuario" class="button is-danger">
+				<a v-if="usuarioKey==re.usuario" class="button is-danger" @click="eliminarReporte(re)">
 					<span class="icon is-small">
 						<i class="fas fa-trash-alt"></i>
 					</span>
@@ -225,8 +225,20 @@ export default {
 		},
 		mostrarCoti(re)
 		{
-			// debugger
+			
 			this.$emit("mostrarCoti", re)
+		},
+		imprimirReporte(re)
+		{
+			
+			this.$emit("imprimirReporte", re)
+		},
+		eliminarReporte(re)
+		{
+			if (confirm('¿Estas seguro de eliminar este formulario?')){
+				this.$emit("eliminarReporte", re)
+			}
+
 		}
 	},
 }

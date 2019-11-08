@@ -157,26 +157,30 @@ export default {
       
       },
     metSubmit() {
-      // alert('enviando...!')
-      // alert(`Eres tipo ${this.usuarios.tipo}`);
         if(this.camposVacios(this.usuarios.usuario,this.usuarios.contrasena,this.confContrasena))
         {
           if (this.confContrasena!=this.usuarios.contrasena) {
            this.campoIgual=true;
            }
           else{
-          console.log("Todo bien");
-          this.campoIgual=false;
-          this.$emit('agregando',this.usuarios);
-          this.confContrasena="";
-          this.usuarios={
-            usuario: '',
-            contrasena: '',
-            tipo: 'Gerente',
-            estatus: 1,
+            if(this.usuarios.usuario.includes(' ') || this.usuarios.contrasena.includes(' '))
+            {
+              alert("Asegurate de no dejar espacios en algun campo");
+
+            }else{
+              console.log("Todo bien");
+              this.campoIgual=false;
+              this.$emit('agregando',this.usuarios);
+              this.confContrasena="";
+              this.usuarios={
+                usuario: '',
+                contrasena: '',
+                tipo: 'Gerente',
+                estatus: 1,
+                }
+            }
           }
         }
-      }
     },
     
     cerrarModal(){
@@ -211,7 +215,7 @@ export default {
                 return true;
               }
             }
-          }
+      }
     },
     borrarUsuario(us){
       this.$emit('borrarUsuarios',us.key);
@@ -231,7 +235,6 @@ export default {
       }
     },
     abrirModal(us){
-      
       this.usuarioEdit.actKey=us.key;
       this.usuarioEdit.nuevoUsuario=us.usuario;
       this.usuarioEdit.nuevaContrasena=us.contrasena;
