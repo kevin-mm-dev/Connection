@@ -18,12 +18,6 @@
             span.icon.is-small
               i.fas.fa-users
             span Usuarios
-        //- li
-        //-   .reportes
-        //-     a.button.is-rounded#btnReportes(@click="metodReportes(),enCambio('reportes')") 
-        //-       span.icon.is-small
-        //-           i.fas.fa-book-open
-        //-       span Reportes
     hr
 
 </template>

@@ -190,7 +190,9 @@ export default {
 
     },
     metAppAgregarUsuario:function(usuario){
+      
       const SELF=this;
+      
       if (usuarioActivo==undefined) {
         console.log("Los siento/a, no puede registrar usuarios ");
         SELF.msgError(SELF.vacio);
@@ -201,6 +203,7 @@ export default {
           }
         else {
           SELF.msgGuardado('');
+          SELF.cambiarEtiqueta('usuarios');
         }
       });
       }
@@ -233,6 +236,8 @@ export default {
           }
         else {
           SELF.msgGuardado('');
+          SELF.cambiarEtiqueta('usuarios');
+
         }
       });
       }
@@ -314,10 +319,16 @@ export default {
       const SELF= this;
        fire.iniciarSesionAuth(usuario,
         function saleBien(key,tipo) {
+          debugger
           SELF.usuarioKey=key;
           SELF.usuarioTipo=tipo;
           SELF.bolLogin=false;
-          SELF.bolForm=true;
+          if(tipo=="Técnico")
+          {
+            SELF.cambiarEtiqueta("reparaciones")
+            }else{
+              SELF.cambiarEtiqueta("inicio")
+          }
           SELF.bolBarraAdmin=true;
         },
         function noExiste() {

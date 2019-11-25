@@ -280,7 +280,6 @@ export default new Vue({
             });
         },
         iniciarSesionAuth: function(usuario, callback, usuarioNoExiste) {
-
             return auth.signInWithEmailAndPassword('q@gmail.com', '123123').then(
                 function() {
                     var usuarioInicio = [];
@@ -290,7 +289,7 @@ export default new Vue({
                         var tamañoArreglo = 0;
                         for (var propiedad in objeto) {
                             tamañoArreglo++;
-                            if (objeto[propiedad].usuario === usuario.usuario && objeto[propiedad].contrasena === usuario.contrasena) {
+                            if (objeto[propiedad].usuario === usuario.usuario && objeto[propiedad].contrasena === usuario.contrasena && objeto[propiedad].estatus === 1) {
                                 usuarioInicio.Key = propiedad;
                                 usuarioKey = propiedad;
                                 usuarioInicio.tipo = objeto[propiedad].tipo;

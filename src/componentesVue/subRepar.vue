@@ -18,7 +18,7 @@
             .field
               .control
                 button.button.is-success(type="submit") BUSCAR
-      button.button.is-info( @click="mostrar('','')") Mis Reparaciones
+      button.button.is-info( @click="mostrar('','')") Reparaciones
     .select(v-show="bolTabla")
       select(id="selctUsuarios" v-if="usuarios!=''" v-model="reporDeUsuario").opcionesUsuarios
         option( v-for="us in usuarios") {{us.usuario}}
